@@ -1,8 +1,18 @@
 import time
+import numpy as np
 
 from client import ClientSocket
 from argparse import ArgumentParser
 
+def UPDATE_GAME_STATE(message):
+    cmd = message[0]
+    value = message[1]
+    if cmd == 'set':        
+        print('UPDATING GAME STATE: ' + cmd)
+        map_mtrx = np.zeros(value)
+        print(map_mtrx)
+        
+    
 
 def play_game(args):
     client_socket = ClientSocket(args.ip, args.port)
@@ -10,7 +20,7 @@ def play_game(args):
     # set message
     message = client_socket.get_message()
     print(message)
-    # UPDATE_GAME_STATE(message)
+    UPDATE_GAME_STATE(message)
     # hum message
     message = client_socket.get_message()
     print(message)
