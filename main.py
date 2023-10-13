@@ -4,30 +4,34 @@ from client import ClientSocket
 from argparse import ArgumentParser
 
 
-def play_game(strategy, args):
+def play_game(args):
     client_socket = ClientSocket(args.ip, args.port)
-    client_socket.send_nme("NOM DE VOTRE IA")
+    client_socket.send_nme("testname")
     # set message
     message = client_socket.get_message()
-    UPDATE_GAME_STATE(message)
+    print(message)
+    # UPDATE_GAME_STATE(message)
     # hum message
     message = client_socket.get_message()
-    UPDATE_GAME_STATE(message)
+    print(message)
+    # UPDATE_GAME_STATE(message)
     # hme message
     message = client_socket.get_message()
-    UPDATE_GAME_STATE(message)
+    print(message)
+    # UPDATE_GAME_STATE(message)
     # map message
     message = client_socket.get_message()
-    UPDATE_GAME_STATE(message)
+    print(message)
+    # UPDATE_GAME_STATE(message)
 
     # start of the game
-    while True:
-        message  = client_socket.get_message()
-        time_message_received = time.time()
-        UPDATE_GAME_STATE(message)
-        if message[0] == "upd":
-            nb_moves, moves = COMPUTE_NEXT_MOVE(GAME_STATE)
-            client_socket.send_mov(nb_moves, moves)
+    # while True:
+    #     message  = client_socket.get_message()
+    #     time_message_received = time.time()
+    #     UPDATE_GAME_STATE(message)
+    #     if message[0] == "upd":
+    #         nb_moves, moves = COMPUTE_NEXT_MOVE(GAME_STATE)
+    #         client_socket.send_mov(nb_moves, moves)
 
 
 if __name__ == '__main__':
@@ -38,4 +42,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     
-    play_game()
+    play_game(args)
