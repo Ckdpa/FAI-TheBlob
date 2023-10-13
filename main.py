@@ -4,13 +4,28 @@ import numpy as np
 from client import ClientSocket
 from argparse import ArgumentParser
 
+def generate_matrix(dim1, dim2):
+    matrix = np.empty((dim1, dim2), dtype=object)
+    
+    for i in range(dim1):
+        for j in range(dim2):
+            matrix[i, j] = ('Empty', 0)
+    
+    return matrix
+
 def UPDATE_GAME_STATE(message):
     cmd = message[0]
     value = message[1]
     if cmd == 'set':        
         print('UPDATING GAME STATE: ' + cmd)
-        map_mtrx = np.zeros(value)
-        print(map_mtrx)
+        matrix = generate_matrix(value[0],value[1])
+        print(matrix)
+        # map_mtrx = np.zeros(value)
+        # print(map_mtrx)
+    if cmd == 'hum':        
+        print('UPDATING GAME STATE: ' + cmd)
+        print()
+
         
     
 
