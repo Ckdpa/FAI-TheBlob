@@ -11,4 +11,6 @@ add_executable(Dominatorix
         main.cpp
         src/Game.h
         src/Game.cpp
+        src/Connection.h
+        src/Connection.cpp
 )

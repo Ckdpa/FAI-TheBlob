@@ -9,7 +9,6 @@
 #include <queue>
 #include <array>
 #include "GameBoard.h"
-#include "Moves.h"
 
 #define HUMAN_BOARD 2
 #define VAMPIRE_BOARD 1
