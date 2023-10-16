@@ -7,4 +7,8 @@ include_directories(src)
 
 add_executable(Dominatorix
         src/GameBoard.cpp
-        src/GameBoard.h)
+        src/GameBoard.h
+        main.cpp
+        src/Game.h
+        src/Game.cpp
+)
