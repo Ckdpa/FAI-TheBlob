@@ -32,9 +32,6 @@ private:
     char rows_;
     char columns_;
     std::array<GameBoard, 3> boards_;
-//    GameBoard human_board_;
-//    GameBoard werewolf_board_;
-//    GameBoard vampire_board_;
     Team current_team_;
 };
 
