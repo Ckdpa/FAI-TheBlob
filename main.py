@@ -2,13 +2,15 @@ import time
 
 from client import ClientSocket
 from argparse import ArgumentParser
+import config
 
 
-def play_game(strategy, args):
-    client_socket = ClientSocket(args.ip, args.port)
+def play_game(strategy=None, args=None):
+    client_socket = ClientSocket(config.SERVER_IP, config.SERVER_PORT)
     client_socket.send_nme("NOM DE VOTRE IA")
     # set message
     message = client_socket.get_message()
+    return 0
     UPDATE_GAME_STATE(message)
     # hum message
     message = client_socket.get_message()
@@ -31,11 +33,11 @@ def play_game(strategy, args):
 
 
 if __name__ == '__main__':
-    parser = ArgumentParser()
+    #parser = ArgumentParser()
 
-    parser.add_argument(dest='ip', default='localhost', type=str, help='IP adress the connection should be made to.')
-    parser.add_argument(dest='port', default='5555', type=int, help='Chosen port for the connection.')
+    #parser.add_argument(dest='ip', default='localhost', type=str, help='IP adress the connection should be made to.')
+    #parser.add_argument(dest='port', default='5555', type=int, help='Chosen port for the connection.')
 
-    args = parser.parse_args()
+    #args = parser.parse_args()
     
     play_game()
