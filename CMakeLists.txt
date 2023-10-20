@@ -27,4 +27,6 @@ add_executable(Dominatorix
         src/server/SETMessage.cpp
         src/server/HMEMessage.h
         src/server/HMEMessage.cpp
+        src/Move.h
+        src/Move.cpp
 )
