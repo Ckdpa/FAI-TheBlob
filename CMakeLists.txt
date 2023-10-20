@@ -21,8 +21,6 @@ add_executable(Dominatorix
         src/server/ENDMessage.cpp
         src/server/UPDMessage.h
         src/server/UPDMessage.cpp
-        src/server/MAPMessage.h
-        src/server/MAPMessage.cpp
         src/server/HUMMessage.h
         src/server/HUMMessage.cpp
         src/server/SETMessage.h

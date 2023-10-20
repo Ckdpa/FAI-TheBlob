@@ -10,7 +10,6 @@
 
 class GameMessage {
 protected:
-    char data[255]{};
 public:
     enum class MessageType {
         SET,
