@@ -6,12 +6,16 @@
 #define DOMINATORIX_HUMMESSAGE_H
 
 
+#include <vector>
 #include "GameMessage.h"
 
 class HUMMessage : public GameMessage {
 public:
     const char* encode() const override;
 
+    explicit HUMMessage(const char* data);
+private:
+    std::vector<std::pair<int, int>> humans_coordinates_;
 };
 
 
