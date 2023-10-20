@@ -10,8 +10,15 @@
 
 class SETMessage : public GameMessage {
 public:
+    SETMessage(const char *data);
+
     const char* encode() const override;
 
+    int get_rows() const;
+    int get_columns() const;
+private:
+    int rows_;
+    int columns_;
 };
 
 
