@@ -12,6 +12,7 @@ class BYEMessage : public GameMessage {
 public:
     const char* encode() const override;
 
+    BYEMessage() = default;
 };
 
 
