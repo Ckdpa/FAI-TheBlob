@@ -1,7 +1,7 @@
 #include <iostream>
 #include "GameBoard.h"
 #include "Game.h"
-#include "Connection.h"
+#include "server/Connection.h"
 
 int main(int argc, char* argv[]) {
     auto connection = Connection("127.0.0.1", 5555);

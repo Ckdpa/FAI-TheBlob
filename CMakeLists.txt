@@ -11,8 +11,20 @@ add_executable(Dominatorix
         main.cpp
         src/Game.h
         src/Game.cpp
-        src/Connection.h
-        src/Connection.cpp
-        src/GameMessage.h
-        src/GameMessage.cpp
+        src/server/Connection.h
+        src/server/Connection.cpp
+        src/server/GameMessage.h
+        src/server/GameMessage.cpp
+        src/server/BYEMessage.h
+        src/server/BYEMessage.cpp
+        src/server/ENDMessage.h
+        src/server/ENDMessage.cpp
+        src/server/UPDMessage.h
+        src/server/UPDMessage.cpp
+        src/server/MAPMessage.h
+        src/server/MAPMessage.cpp
+        src/server/HUMMessage.h
+        src/server/HUMMessage.cpp
+        src/server/SETMessage.h
+        src/server/SETMessage.cpp
 )

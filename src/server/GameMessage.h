@@ -22,7 +22,7 @@ public:
 
     GameMessage() = default;
     virtual ~GameMessage() = default;
-    virtual void parse() = 0;
+    virtual void encode() = 0;
     static MessageType parse_message_type(const std::string &bytes);
 };
 // Héritage ?

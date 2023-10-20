@@ -22,6 +22,8 @@ public:
     ~Connection();
     int connect_socket();
     int close_connection() const;
+
+    void write(char* data);
 private:
     struct sockaddr_in conn_info_{};
     int conn_;
