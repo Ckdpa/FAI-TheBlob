@@ -13,3 +13,7 @@ HUMMessage::HUMMessage(const char *data) {
         humans_coordinates_.emplace_back(data[i], data[i + 1]);
     }
 }
+
+std::vector<std::pair<const int, const int>> HUMMessage::get_human_coordinates_() const {
+    return humans_coordinates_;
+}

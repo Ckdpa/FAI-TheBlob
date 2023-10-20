@@ -14,8 +14,10 @@ public:
     const char* encode() const override;
 
     explicit HUMMessage(const char* data);
+
+    std::vector<std::pair<const int, const int>> get_human_coordinates_() const;
 private:
-    std::vector<std::pair<int, int>> humans_coordinates_;
+    std::vector<std::pair<const int, const int>> humans_coordinates_;
 };
 
 
