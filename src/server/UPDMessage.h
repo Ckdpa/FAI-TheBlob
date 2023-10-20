@@ -6,12 +6,17 @@
 #define DOMINATORIX_UPDMESSAGE_H
 
 
+#include <vector>
 #include "GameMessage.h"
 
 class UPDMessage : public GameMessage {
 public:
     const char* encode() const override;
 
+    UPDMessage(char* data);
+
+    // TODO : create and implement Move
+    // UPDMessage(std::vector<Move> moves);
 };
 
 

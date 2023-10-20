@@ -19,7 +19,8 @@ public:
 
     enum class Team {
         WEREWOLF = 0,
-        VAMPIRE = 1
+        VAMPIRE = 1,
+        HUMAN = 2,
     };
     Game(char rows, char columns, Team team);
     ~Game() = default;

@@ -13,10 +13,10 @@ HMEMessage::HMEMessage(const char *data)
 
 }
 
-int HMEMessage::get_starting_row() const {
+char HMEMessage::get_starting_row() const {
     return row_;
 }
 
-int HMEMessage::get_starting_col() const {
+char HMEMessage::get_starting_col() const {
     return col_;
 }

@@ -14,11 +14,11 @@ public:
 
     const char* encode() const override;
 
-    int get_rows() const;
-    int get_columns() const;
+    char get_rows() const;
+    char get_columns() const;
 private:
-    int rows_;
-    int columns_;
+    char rows_;
+    char columns_;
 };
 
 

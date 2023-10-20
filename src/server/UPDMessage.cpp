@@ -7,3 +7,7 @@
 const char *UPDMessage::encode() const {
     return nullptr;
 }
+
+UPDMessage::UPDMessage(char *data) {
+
+}

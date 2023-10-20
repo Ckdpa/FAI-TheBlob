@@ -12,10 +12,10 @@ SETMessage::SETMessage(const char* data)
 :rows_(data[0]), columns_(data[1]){
 }
 
-int SETMessage::get_rows() const {
+char SETMessage::get_rows() const {
     return rows_;
 }
 
-int SETMessage::get_columns() const {
+char SETMessage::get_columns() const {
     return columns_;
 }
