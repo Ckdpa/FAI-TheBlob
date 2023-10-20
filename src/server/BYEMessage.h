@@ -10,7 +10,7 @@
 
 class BYEMessage : public GameMessage {
 public:
-    const char* encode() const override;
+    std::string encode() const override;
 
     BYEMessage() = default;
 };

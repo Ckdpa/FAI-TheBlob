@@ -4,7 +4,7 @@
 
 #include "HUMMessage.h"
 
-const char *HUMMessage::encode() const {
+std::string HUMMessage::encode() const {
     return nullptr; // We do not send encode messages
 }
 

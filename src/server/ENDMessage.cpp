@@ -4,6 +4,6 @@
 
 #include "ENDMessage.h"
 
-const char *ENDMessage::encode() const {
+std::string ENDMessage::encode() const {
     return nullptr;
 }

@@ -10,7 +10,7 @@
 
 class ENDMessage : public GameMessage {
 public:
-    const char* encode() const override;
+    std::string encode() const override;
 
     ENDMessage() = default;
 };

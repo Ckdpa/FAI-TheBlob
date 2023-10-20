@@ -27,7 +27,7 @@ public:
      * Translate the internal message in the byte representation to be sent to the server.
      * @return
      */
-    virtual const char* encode() const = 0;
+    virtual std::string encode() const = 0;
     static MessageType parse_message_type(const std::string &bytes);
 };
 // Héritage ?

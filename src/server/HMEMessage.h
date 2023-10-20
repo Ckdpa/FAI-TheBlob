@@ -10,7 +10,7 @@
 
 class HMEMessage : public GameMessage {
 public:
-    const char* encode() const override;
+    std::string encode() const override;
 
     explicit HMEMessage(const char* data);
 

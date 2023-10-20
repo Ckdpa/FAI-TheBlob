@@ -8,15 +8,17 @@
 
 #include <vector>
 #include "GameMessage.h"
+#include "Move.h"
 
 class UPDMessage : public GameMessage {
 public:
-    const char* encode() const override;
+    std::string encode() const override;
 
     UPDMessage(char* data);
 
-    // TODO : create and implement Move
-    // UPDMessage(std::vector<Move> moves);
+    explicit UPDMessage(std::vector<Move>& moves);
+private:
+    std::vector<Move> moves_;
 };
 
 

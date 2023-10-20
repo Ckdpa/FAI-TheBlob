@@ -4,7 +4,7 @@
 
 #include "HMEMessage.h"
 
-const char *HMEMessage::encode() const {
+std::string HMEMessage::encode() const {
     return nullptr; // We should not send this message
 }
 

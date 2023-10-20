@@ -9,6 +9,7 @@
 #include "Game.h"
 
 class Move {
+public:
     Move(char starting_row, char ending_row, char number_entities, Game::Team moving_team);
 
     Game::Team get_moving_team() const;

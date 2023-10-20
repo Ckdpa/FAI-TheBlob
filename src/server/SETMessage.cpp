@@ -4,7 +4,7 @@
 
 #include "SETMessage.h"
 
-const char *SETMessage::encode() const {
+std::string SETMessage::encode() const {
     return nullptr; // We should no send SET messages
 }
 

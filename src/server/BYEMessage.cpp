@@ -4,6 +4,6 @@
 
 #include "BYEMessage.h"
 
-const char *BYEMessage::encode() const {
+std::string BYEMessage::encode() const {
     return nullptr;
 }

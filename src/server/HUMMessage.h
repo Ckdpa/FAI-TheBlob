@@ -11,7 +11,7 @@
 
 class HUMMessage : public GameMessage {
 public:
-    const char* encode() const override;
+    std::string encode() const override;
 
     explicit HUMMessage(const char* data);
 

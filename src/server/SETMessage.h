@@ -12,7 +12,7 @@ class SETMessage : public GameMessage {
 public:
     SETMessage(const char *data);
 
-    const char* encode() const override;
+    std::string encode() const override;
 
     char get_rows() const;
     char get_columns() const;
