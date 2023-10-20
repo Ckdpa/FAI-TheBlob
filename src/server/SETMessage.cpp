@@ -3,3 +3,7 @@
 //
 
 #include "SETMessage.h"
+
+const char *SETMessage::encode() const {
+    return nullptr;
+}

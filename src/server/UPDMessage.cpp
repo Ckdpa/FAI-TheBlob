@@ -3,3 +3,7 @@
 //
 
 #include "UPDMessage.h"
+
+const char *UPDMessage::encode() const {
+    return nullptr;
+}

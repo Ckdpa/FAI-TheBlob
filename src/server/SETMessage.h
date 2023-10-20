@@ -6,7 +6,11 @@
 #define DOMINATORIX_SETMESSAGE_H
 
 
-class SETMessage {
+#include "GameMessage.h"
+
+class SETMessage : public GameMessage {
+public:
+    const char* encode() const override;
 
 };
 

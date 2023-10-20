@@ -3,3 +3,7 @@
 //
 
 #include "BYEMessage.h"
+
+const char *BYEMessage::encode() const {
+    return nullptr;
+}

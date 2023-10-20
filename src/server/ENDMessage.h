@@ -6,7 +6,11 @@
 #define DOMINATORIX_ENDMESSAGE_H
 
 
-class ENDMessage {
+#include "GameMessage.h"
+
+class ENDMessage : public GameMessage {
+public:
+    const char* encode() const override;
 
 };
 

@@ -3,3 +3,7 @@
 //
 
 #include "ENDMessage.h"
+
+const char *ENDMessage::encode() const {
+    return nullptr;
+}

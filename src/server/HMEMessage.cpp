@@ -3,3 +3,7 @@
 //
 
 #include "HMEMessage.h"
+
+const char *HMEMessage::encode() const {
+    return nullptr;
+}

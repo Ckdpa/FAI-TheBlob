@@ -6,7 +6,11 @@
 #define DOMINATORIX_MAPMESSAGE_H
 
 
-class MAPMessage {
+#include "GameMessage.h"
+
+class MAPMessage : public GameMessage {
+public:
+    const char* encode() const override;
 
 };
 

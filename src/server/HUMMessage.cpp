@@ -3,3 +3,7 @@
 //
 
 #include "HUMMessage.h"
+
+const char *HUMMessage::encode() const {
+    return nullptr;
+}
