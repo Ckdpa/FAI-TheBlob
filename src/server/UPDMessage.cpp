@@ -22,7 +22,7 @@ std::string UPDMessage::encode() const {
     return encoded_UPD.str();
 }
 
-UPDMessage::UPDMessage(char *data) {
+UPDMessage::UPDMessage(const char *data) {
     for (char i = 1; i < data[0]; i += 5) {
         Game::Team moving_team;
         char moving_entities;
