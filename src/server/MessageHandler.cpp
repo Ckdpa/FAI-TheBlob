@@ -11,22 +11,24 @@
 
 GameMessage* MessageHandler::parse_message_type(const std::string &bytes) {
     auto data = bytes.c_str() + 3;
-    if (bytes == "UPD") {
+    auto head = bytes.substr(0, 3);
+
+    if (head == "UPD") {
         return new UPDMessage(data);
     }
-    else if (bytes == "SET") {
+    else if (head == "SET") {
         return new SETMessage(data);
     }
-    else if (bytes == "HME") {
+    else if (head == "HME") {
         return new HMEMessage(data);
     }
-    else if (bytes == "MAP") {
+    else if (head == "MAP") {
         return new UPDMessage(data);
     }
-    else if (bytes == "END") {
+    else if (head == "END") {
         return new UPDMessage(data);
     }
-    else if (bytes == "BYE") {
+    else if (head == "BYE") {
         return new BYEMessage();
     }
     else
