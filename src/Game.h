@@ -26,6 +26,8 @@ public:
     ~Game() = default;
     friend std::ostream& operator<<(std::ostream& os, const Game& game);
 
+    void set_home(int row, int col);
+
     [[nodiscard]] Team next_team() const;
 
     [[nodiscard]] std::queue<GameBoard> generate_moves() const;

@@ -45,3 +45,10 @@ std::queue<GameBoard> Game::generate_moves() const {
 
     return {};
 }
+
+void Game::set_home(int row, int col) {
+    current_team_ = static_cast<Team>(
+            (boards_[WEREWOLF_BOARD][row * col + col] & static_cast<int>(Team::WEREWOLF)) |
+            (boards_[VAMPIRE_BOARD][row * col + col] & static_cast<int>(Team::VAMPIRE))
+            );
+}
