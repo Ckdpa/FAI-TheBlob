@@ -27,6 +27,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Game& game);
 
     void set_home(int row, int col);
+    void set_humans(std::vector<std::pair<const char, const char>> humans_coordinates);
 
     [[nodiscard]] Team next_team() const;
 
