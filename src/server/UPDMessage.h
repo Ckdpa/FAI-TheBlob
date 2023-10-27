@@ -8,7 +8,7 @@
 
 #include <vector>
 #include "GameMessage.h"
-#include "Move.h"
+#include "Update.h"
 
 class UPDMessage : public GameMessage {
 public:
@@ -16,9 +16,11 @@ public:
     MessageType get_message_type() const override;
 
     explicit UPDMessage(const char* data);
-    explicit UPDMessage(std::vector<Move>& moves);
+    explicit UPDMessage(std::vector<Update>& moves);
+
+    std::vector<Update> get_updates() const;
 private:
-    std::vector<Move> moves_;
+    std::vector<Update> moves_;
 };
 
 

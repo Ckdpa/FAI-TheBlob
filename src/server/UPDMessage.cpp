@@ -15,7 +15,7 @@ std::string UPDMessage::encode() const {
     for (auto move : moves_) {
         moving_entities.fill(0);
         moving_entities[static_cast<int>(move.get_moving_team())] = move.number_entities();
-        encoded_UPD << move.get_starting_row() << move.get_ending_row(); // Coordinates
+        encoded_UPD << move.get_x() << move.get_y(); // Coordinates
         encoded_UPD << moving_entities[static_cast<int>(Game::Team::HUMAN)]; // H
         encoded_UPD << moving_entities[static_cast<int>(Game::Team::VAMPIRE)]; // V
         encoded_UPD << moving_entities[static_cast<int>(Game::Team::WEREWOLF)]; // W
@@ -41,10 +41,14 @@ UPDMessage::UPDMessage(const char *data) {
     }
 }
 
-UPDMessage::UPDMessage(std::vector<Move>& moves)
+UPDMessage::UPDMessage(std::vector<Update>& moves)
 :moves_(std::move(moves)){
 }
 
 GameMessage::MessageType UPDMessage::get_message_type() const {
     return GameMessage::MessageType::UPD;
+}
+
+std::vector<Update> UPDMessage::get_updates() const {
+    return moves_;
 }
