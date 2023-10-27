@@ -26,12 +26,12 @@ public:
     int close_connection() const;
     void socket_write(const GameMessage& message);
     bool pending_message();
-
+    GameMessage* read_socket();
 private:
     struct sockaddr_in conn_info_{};
-    int conn_;
     CONN_STATUS status_;
     struct pollfd ufds_{};
+    char buff_[1024]{};
 };
 
 
