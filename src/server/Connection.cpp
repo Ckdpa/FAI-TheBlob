@@ -88,6 +88,7 @@ bool Connection::pending_message() {
     } else {
         std::cerr << "Received message in other mode than POLLIN" << std::endl;
     }
+    return false;
 }
 
 GameMessage *Connection::read_socket() {
