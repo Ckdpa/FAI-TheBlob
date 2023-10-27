@@ -11,6 +11,7 @@ std::string UPDMessage::encode() const {
     std::stringstream encoded_UPD("UPD");
 
     std::array<char, 3> moving_entities{};
+    encoded_UPD << static_cast<char>(moves_.size());
     for (auto move : moves_) {
         moving_entities.fill(0);
         moving_entities[static_cast<int>(move.get_moving_team())] = move.number_entities();
