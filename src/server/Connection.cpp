@@ -11,8 +11,11 @@
 #include <stdexcept>
 #include <iostream>
 #include <cstring>
+#include <sys/poll.h>
 
 Connection::Connection(const std::string& ip, int port) {
+
+    ufds_.events = POLLIN;
     conn_ = 0;
     status_ = CONN_STATUS::DISCONNECTED;
     conn_info_.sin_family = AF_INET;
@@ -70,5 +73,18 @@ void Connection::socket_write(const GameMessage &message) {
             status_ = CONN_STATUS::ERROR;
         }
         written_bytes += write_status;
+    }
+}
+
+bool Connection::pending_message() {
+    auto rv = poll(&ufds_, conn_, 100);
+    if (rv == -1) {
+        perror("poll"); // error occurred in poll()
+    } else if (rv == 0) {
+        return false;
+    } else if (ufds_.revents & POLLIN) {
+        return true;
+    } else {
+        std::cerr << "Received message in other mode than POLLIN" << std::endl;
     }
 }

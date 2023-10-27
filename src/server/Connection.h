@@ -7,6 +7,7 @@
 
 #include <string>
 #include <netinet/in.h>
+#include <sys/poll.h>
 #include "GameMessage.h"
 
 // Connect to the server using TCP/IP Socket on a given port and IP adress
@@ -24,11 +25,13 @@ public:
     int connect_socket();
     int close_connection() const;
     void socket_write(const GameMessage& message);
+    bool pending_message();
 
 private:
     struct sockaddr_in conn_info_{};
     int conn_;
     CONN_STATUS status_;
+    struct pollfd ufds_{};
 };
 
 
