@@ -18,3 +18,7 @@ std::string NMEMessage::encode() const {
     encoded_NME << "NME" << static_cast<char>(name_.size()) << name_;
     return encoded_NME.str();
 }
+
+GameMessage::MessageType NMEMessage::get_message_type() const {
+    return GameMessage::MessageType::NME;
+}

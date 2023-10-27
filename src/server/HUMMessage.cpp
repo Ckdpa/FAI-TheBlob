@@ -17,3 +17,7 @@ HUMMessage::HUMMessage(const char *data) {
 std::vector<std::pair<const char, const char>> HUMMessage::get_human_coordinates_() const {
     return humans_coordinates_;
 }
+
+GameMessage::MessageType HUMMessage::get_message_type() const {
+    return GameMessage::MessageType::HUM;
+}

@@ -44,3 +44,7 @@ UPDMessage::UPDMessage(const char *data) {
 UPDMessage::UPDMessage(std::vector<Move>& moves)
 :moves_(std::move(moves)){
 }
+
+GameMessage::MessageType UPDMessage::get_message_type() const {
+    return GameMessage::MessageType::UPD;
+}

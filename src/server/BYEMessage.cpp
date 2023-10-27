@@ -7,3 +7,8 @@
 std::string BYEMessage::encode() const {
     return nullptr;
 }
+
+GameMessage::MessageType BYEMessage::get_message_type() const {
+    return GameMessage::MessageType::BYE;
+}
+

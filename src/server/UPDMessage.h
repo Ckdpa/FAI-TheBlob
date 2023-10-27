@@ -13,6 +13,7 @@
 class UPDMessage : public GameMessage {
 public:
     std::string encode() const override;
+    MessageType get_message_type() const override;
 
     explicit UPDMessage(const char* data);
     explicit UPDMessage(std::vector<Move>& moves);

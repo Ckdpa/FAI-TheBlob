@@ -20,3 +20,7 @@ char HMEMessage::get_starting_row() const {
 char HMEMessage::get_starting_col() const {
     return col_;
 }
+
+GameMessage::MessageType HMEMessage::get_message_type() const {
+    return GameMessage::MessageType::HME;
+}

@@ -19,3 +19,7 @@ char SETMessage::get_rows() const {
 char SETMessage::get_columns() const {
     return columns_;
 }
+
+GameMessage::MessageType SETMessage::get_message_type() const {
+    return GameMessage::MessageType::SET;
+}

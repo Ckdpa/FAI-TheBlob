@@ -7,3 +7,7 @@
 std::string ENDMessage::encode() const {
     return nullptr;
 }
+
+GameMessage::MessageType ENDMessage::get_message_type() const {
+    return GameMessage::MessageType::END;
+}

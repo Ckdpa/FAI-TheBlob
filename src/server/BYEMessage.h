@@ -11,7 +11,7 @@
 class BYEMessage : public GameMessage {
 public:
     std::string encode() const override;
-
+    MessageType get_message_type() const override;
     BYEMessage() = default;
 };
 

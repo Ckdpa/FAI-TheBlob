@@ -13,6 +13,7 @@ public:
     SETMessage(const char *data);
 
     std::string encode() const override;
+    MessageType get_message_type() const override;
 
     char get_rows() const;
     char get_columns() const;

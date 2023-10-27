@@ -11,6 +11,7 @@
 class HMEMessage : public GameMessage {
 public:
     std::string encode() const override;
+    MessageType get_message_type() const override;
 
     explicit HMEMessage(const char* data);
 

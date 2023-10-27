@@ -11,6 +11,7 @@
 class ENDMessage : public GameMessage {
 public:
     std::string encode() const override;
+    MessageType get_message_type() const override;
 
     ENDMessage() = default;
 };

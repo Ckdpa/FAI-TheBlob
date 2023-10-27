@@ -14,6 +14,7 @@ public:
     NMEMessage(std::string name);
 
     std::string encode() const override;
+    MessageType get_message_type() const override;
 private:
     const std::string name_;
 };
