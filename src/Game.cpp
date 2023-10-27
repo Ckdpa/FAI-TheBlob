@@ -36,7 +36,7 @@ std::queue<GameBoard> Game::generate_moves() const {
     // For example, for each group of creatures, should we split the group ? How many creatures to split ?
     for (int row = 0; row < rows_; row++) {
         for (int column = 0; column < columns_; column++) {
-            auto creature_group = current_board[row * columns_ + column];
+            auto creature_group = current_board.get(row * columns_ + column);
             if (creature_group) {
 
             }
@@ -48,8 +48,8 @@ std::queue<GameBoard> Game::generate_moves() const {
 
 void Game::set_home(int row, int col) {
     current_team_ = static_cast<Team>(
-            (boards_[WEREWOLF_BOARD][row * columns_ + col] & static_cast<int>(Team::WEREWOLF)) |
-            (boards_[VAMPIRE_BOARD][row * columns_ + col] & static_cast<int>(Team::VAMPIRE))
+            (boards_[WEREWOLF_BOARD].get(row * columns_ + col) & static_cast<int>(Team::WEREWOLF)) |
+            (boards_[VAMPIRE_BOARD].get(row * columns_ + col) & static_cast<int>(Team::VAMPIRE))
             );
 }
 
@@ -57,8 +57,6 @@ void Game::set_humans(std::vector<std::pair<const char, const char>> humans_coor
     for (auto human_house : humans_coordinates) {
         auto row = human_house.first;
         auto col = human_house.second;
-        // a[2] = 0;
-        // a[2]
         boards_[HUMAN_BOARD].set(row * columns_ + col, 0);
     }
 }

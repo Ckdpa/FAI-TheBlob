@@ -20,8 +20,12 @@ std::ostream &operator<<(std::ostream &os, const GameBoard &game) {
     return os;
 }
 
-char GameBoard::operator[](int c) const {
-    return board_[c];
+char GameBoard::get(int index) const {
+    return board_[index];
+}
+
+void GameBoard::set(int index, char value) {
+    board_[index] = value;
 }
 
 

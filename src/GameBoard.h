@@ -11,12 +11,13 @@
 // This class is meant to efficiently store the board representation
 class GameBoard {
 private:
-    const char* board_;
+    char* board_;
 public:
     GameBoard(char rows, char columns);
     ~GameBoard();
     friend std::ostream& operator<<(std::ostream& os, const GameBoard& game);
-    char operator[](int c) const;
+    void set(int index, char value);
+    char get(int index) const;
 };
 
 
