@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <stdexcept>
 #include <iostream>
+#include <cstring>
 
 Connection::Connection(const std::string& ip, int port) {
     conn_ = 0;
@@ -49,4 +50,25 @@ int Connection::close_connection() const {
         perror("Error closing connection");
     }
     return status;
+}
+
+std::ostream &operator<<(std::ostream &os, const GameMessage &game) {
+    os << game.encode();
+    return os;
+}
+
+void Connection::socket_write(const GameMessage &message) {
+    const char* data = message.encode().c_str();
+    if (status_ != CONN_STATUS::CONNECTED) {
+        std::cerr << "Socket is not connected, cannot write message";
+    }
+    size_t written_bytes = 0;
+    while (written_bytes < strlen(data)) {
+        auto write_status = write(conn_, data + written_bytes, strlen(data) - written_bytes);
+        if (write_status < 0) {
+            std::cerr << "Error while writing message";
+            status_ = CONN_STATUS::ERROR;
+        }
+        written_bytes += write_status;
+    }
 }

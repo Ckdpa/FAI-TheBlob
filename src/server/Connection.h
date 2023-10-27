@@ -7,6 +7,7 @@
 
 #include <string>
 #include <netinet/in.h>
+#include "GameMessage.h"
 
 // Connect to the server using TCP/IP Socket on a given port and IP adress
 class Connection {
@@ -22,8 +23,8 @@ public:
     ~Connection();
     int connect_socket();
     int close_connection() const;
+    void socket_write(const GameMessage& message);
 
-    void write(char* data);
 private:
     struct sockaddr_in conn_info_{};
     int conn_;
