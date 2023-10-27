@@ -31,4 +31,6 @@ add_executable(Dominatorix
         src/Move.cpp
         src/server/MessageHandler.h
         src/server/MessageHandler.cpp
+        src/server/NMEMessage.h
+        src/server/NMEMessage.cpp
 )
