@@ -86,11 +86,11 @@ def play_game(args):
     # start of the game
     while True:
         message  = client_socket.get_message()
-        time_message_received = time.time()
-        UPDATE_GAME_STATE(message)
-        if message[0] == "upd":
-            nb_moves, moves = (1, [(3, pos_y, 2, pos_x, pos_y-1)])
-            client_socket.send_mov(nb_moves, moves)
+        # time_message_received = time.time()
+        # UPDATE_GAME_STATE(message)
+        # if message[0] == "upd":
+        #     nb_moves, moves = (1, [(3, pos_y, 2, pos_x, pos_y-1)])
+        #     client_socket.send_mov(nb_moves, moves)
 
 
 if __name__ == '__main__':
