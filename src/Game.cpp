@@ -53,10 +53,18 @@ void Game::set_home(int row, int col) {
             );
 }
 
-void Game::set_humans(std::vector<std::pair<const char, const char>> humans_coordinates) {
+void Game::set_humans(const std::vector<std::pair<const char, const char>>& humans_coordinates) {
     for (auto human_house : humans_coordinates) {
         auto row = human_house.first;
         auto col = human_house.second;
         boards_[HUMAN_BOARD].set(row * columns_ + col, 0);
+    }
+}
+
+void Game::update_state(const std::vector<Update>& updates) {
+    for (auto update : updates) {
+        boards_[dynamic_cast<int>(update.get_moving_team())].set(
+                update.get_x() * columns_ + update.get_y(),
+                update.number_entities());
     }
 }

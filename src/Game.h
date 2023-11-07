@@ -14,6 +14,9 @@
 #define VAMPIRE_BOARD 1
 #define WEREWOLF_BOARD 0
 
+#include "Update.h"
+class Update;
+
 class Game {
 public:
 
@@ -27,11 +30,11 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Game& game);
 
     void set_home(int row, int col);
-    void set_humans(std::vector<std::pair<const char, const char>> humans_coordinates);
-
+    void set_humans(const std::vector<std::pair<const char, const char>>& humans_coordinates);
+    void update_state(const std::vector<Update>& updates);
     [[nodiscard]] Team next_team() const;
 
-    [[nodiscard]] std::queue<GameBoard> generate_moves() const;
+    [[nodiscard]] std::queue<GameBoard> generate_moves() const; // Signature is not final
 private:
     char rows_;
     char columns_;
