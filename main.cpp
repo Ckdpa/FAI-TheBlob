@@ -8,21 +8,22 @@
 #include "server/SETMessage.h"
 #include "server/UPDMessage.h"
 
+bool init_game(Connection conn, const char* name) {
+    GameMessage *name_msg = new NMEMessage(name);
+    conn.socket_write(*name_msg);
+    delete name_msg;
+    return true;
+}
 
 int main(int argc, char* argv[]) {
     auto connection = Connection("localhost", 5555);
     if (connection.connect_socket() < 0) {
         return -1;
     }
-    { // Initiate our connection and declare ourselves
-        GameMessage *name_msg = new NMEMessage("Dominatorix");
-        connection.socket_write(*name_msg);
-        delete name_msg;
-    }
+    init_game(connection, "Dominatorix");
     // Initiate game
     bool is_running = true;
     Game* game = nullptr;
-    auto i = 0;
     while (is_running) {
         if (not connection.pending_message()) {
             sleep(1);
@@ -34,6 +35,8 @@ int main(int argc, char* argv[]) {
                 if (game != nullptr) {
                     delete game;
                 }
+                // Prepare for next game
+                init_game(connection, "Dominatorix");
                 break;
             case GameMessage::MessageType::BYE:
                 if (game != nullptr) {
@@ -53,10 +56,11 @@ int main(int argc, char* argv[]) {
             case GameMessage::MessageType::SET:
                 game = new Game(dynamic_cast<SETMessage*>(message)->get_rows(),
                                 dynamic_cast<SETMessage*>(message)->get_rows(),
-                                Game::Team::HUMAN); // Set team to HUMAN for start, it will be updated in further messages.
+                                GameTeam::HUMAN); // Set team to HUMAN for start, it will be updated in further messages.
                 break;
             case GameMessage::MessageType::UPD:
                 game->update_state(dynamic_cast<UPDMessage*>(message)->get_updates());
+                std::cout << game;
                 break;
             case GameMessage::MessageType::MAP:
                 // Will not happen

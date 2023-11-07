@@ -2,19 +2,33 @@
 // Created by felix on 08/10/23.
 //
 
+#include <iomanip>
 #include "Game.h"
 
 std::ostream &operator<<(std::ostream &os, const Game &game) {
-    os << "Game is of size "<< game.rows_ << " rows, " << game.columns_ << " columns\n";
-    os << "Human board is:" << game.boards_[HUMAN_BOARD] << std::endl;
-    os << "Werewolves board is:" << game.boards_[WEREWOLF_BOARD] << std::endl;
-    os << "Vampire board is:" << game.boards_[VAMPIRE_BOARD] << std::endl;
-    os << "Current playing team:" << static_cast<int>(game.current_team_) << std::endl;
     os << "Next team:" << static_cast<int>(game.next_team()) << std::endl;
+    int cell_idx; // Iterate on the boards
+    int entity_count;
+    for (auto row = 0; row < game.rows_; row++) {
+        for (auto col = 0; col < game.columns_; col++) {
+            cell_idx = row * game.columns_ + col;
+            if ((entity_count = game.boards_[HUMAN_BOARD].get(cell_idx))) {
+                os << std::setfill(' ') << std::setw(3) << entity_count << 'H';
+            } else if ((entity_count = game.boards_[VAMPIRE_BOARD].get(cell_idx))) {
+                os << std::setfill(' ') << std::setw(3) << entity_count << 'V';
+            } else if ((entity_count = game.boards_[WEREWOLF_BOARD].get(cell_idx))) {
+                os << std::setfill(' ') << std::setw(3) << entity_count << 'W';
+            } else {
+                os << std::setfill(' ') << std::setw(4) <<  0;
+            }
+        }
+        os << std::endl;
+    }
+    os << std::endl;
     return os;
 }
 
-Game::Game(char rows, char columns, Team team)
+Game::Game(char rows, char columns, GameTeam team)
         :rows_(rows),
          columns_(columns),
          boards_(std::array<GameBoard, 3>{
@@ -26,8 +40,8 @@ Game::Game(char rows, char columns, Team team)
 {
 }
 
-Game::Team Game::next_team() const {
-    return static_cast<Game::Team>(1 - static_cast<int>(current_team_));
+GameTeam Game::next_team() const {
+    return static_cast<GameTeam>(1 - static_cast<int>(current_team_));
 }
 
 std::queue<GameBoard> Game::generate_moves() const {
@@ -47,9 +61,9 @@ std::queue<GameBoard> Game::generate_moves() const {
 }
 
 void Game::set_home(int row, int col) {
-    current_team_ = static_cast<Team>(
-            (boards_[WEREWOLF_BOARD].get(row * columns_ + col) & static_cast<int>(Team::WEREWOLF)) |
-            (boards_[VAMPIRE_BOARD].get(row * columns_ + col) & static_cast<int>(Team::VAMPIRE))
+    current_team_ = static_cast<GameTeam>(
+            (boards_[WEREWOLF_BOARD].get(row * columns_ + col) & static_cast<int>(GameTeam::WEREWOLF)) |
+            (boards_[VAMPIRE_BOARD].get(row * columns_ + col) & static_cast<int>(GameTeam::VAMPIRE))
             );
 }
 
@@ -63,7 +77,7 @@ void Game::set_humans(const std::vector<std::pair<const char, const char>>& huma
 
 void Game::update_state(const std::vector<Update>& updates) {
     for (auto update : updates) {
-        boards_[dynamic_cast<int>(update.get_moving_team())].set(
+        boards_[static_cast<int>(update.get_moving_team())].set(
                 update.get_x() * columns_ + update.get_y(),
                 update.number_entities());
     }

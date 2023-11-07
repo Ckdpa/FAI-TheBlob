@@ -4,11 +4,12 @@
 
 #include "Update.h"
 
-Update::Update(char starting_row, char ending_row, char number_entities, Game::Team moving_team)
+
+Update::Update(char starting_row, char ending_row, char number_entities, GameTeam& moving_team)
 : x_(starting_row), y_(ending_row), number_entities_(number_entities), moving_team_(moving_team){
 }
 
-Game::Team Update::get_moving_team() const {
+GameTeam Update::get_moving_team() const {
     return moving_team_;
 }
 

@@ -6,6 +6,7 @@
 
 #include <utility>
 #include <sstream>
+#include <array>
 
 std::string UPDMessage::encode() const {
     std::stringstream encoded_UPD("UPD");
@@ -16,22 +17,22 @@ std::string UPDMessage::encode() const {
         moving_entities.fill(0);
         moving_entities[static_cast<int>(move.get_moving_team())] = move.number_entities();
         encoded_UPD << move.get_x() << move.get_y(); // Coordinates
-        encoded_UPD << moving_entities[static_cast<int>(Game::Team::HUMAN)]; // H
-        encoded_UPD << moving_entities[static_cast<int>(Game::Team::VAMPIRE)]; // V
-        encoded_UPD << moving_entities[static_cast<int>(Game::Team::WEREWOLF)]; // W
+        encoded_UPD << moving_entities[static_cast<int>(GameTeam::HUMAN)]; // H
+        encoded_UPD << moving_entities[static_cast<int>(GameTeam::VAMPIRE)]; // V
+        encoded_UPD << moving_entities[static_cast<int>(GameTeam::WEREWOLF)]; // W
     }
     return encoded_UPD.str();
 }
 
 UPDMessage::UPDMessage(const char *data) {
     for (char i = 1; i < data[0]; i += 5) {
-        Game::Team moving_team;
+        GameTeam moving_team;
         char moving_entities;
         char team = 0;
         while (data[i + team] != 0) {
             team++; // Look for the moving team
         }
-        moving_team = Game::Team(data[i + team]);
+        moving_team = GameTeam(data[i + team]);
         moving_entities = data[i+2 + team];
         moves_.emplace_back(
             data[i],

@@ -15,31 +15,24 @@
 #define WEREWOLF_BOARD 0
 
 #include "Update.h"
-class Update;
+#include "GameTeam.h"
 
 class Game {
 public:
-
-    enum class Team {
-        WEREWOLF = 0,
-        VAMPIRE = 1,
-        HUMAN = 2,
-    };
-    Game(char rows, char columns, Team team);
+    Game(char rows, char columns, GameTeam team);
     ~Game() = default;
     friend std::ostream& operator<<(std::ostream& os, const Game& game);
-
     void set_home(int row, int col);
     void set_humans(const std::vector<std::pair<const char, const char>>& humans_coordinates);
     void update_state(const std::vector<Update>& updates);
-    [[nodiscard]] Team next_team() const;
+    [[nodiscard]] GameTeam next_team() const;
 
     [[nodiscard]] std::queue<GameBoard> generate_moves() const; // Signature is not final
 private:
     char rows_;
     char columns_;
     std::array<GameBoard, 3> boards_;
-    Team current_team_;
+    GameTeam current_team_;
 };
 
 

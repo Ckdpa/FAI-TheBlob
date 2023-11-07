@@ -33,4 +33,5 @@ add_executable(Dominatorix
         src/server/MessageHandler.cpp
         src/server/NMEMessage.h
         src/server/NMEMessage.cpp
+        src/GameTeam.h
 )
