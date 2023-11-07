@@ -6,71 +6,200 @@ from enum import Enum
 import random
 import numpy as np
 
-class Strategy(Enum):
-    ATK = 1
-    DEF = 2
-    COV = 3
-
+"""
+-------------------------------------------------------------------------------------
+- GENERATE MATRIX FOR INIT
+-------------------------------------------------------------------------------------
+"""
 def generate_matrix(r, c):
     matrix = np.empty((r, c), dtype=object)
-    
     for i in range(r):
         for j in range(c):
             matrix[i, j] = ('Empty', 0)
-    
     return matrix
 
-def heuristic(matrix):
-    #Determine general strategy, compute general state of the map and determine if we atk, def or cov.
-    return Strategy.ATK
+"""
+-------------------------------------------------------------------------------------
+- SIMULATE COMBAT
+-------------------------------------------------------------------------------------
+"""
+def calculate_probability(E1, E2):
+    if E1 == E2:
+        return 0.5
+    elif E1 < E2:
+        return E1 / (2 * E2)
+    else:
+        return (E1 / E2) - 0.5
 
-def generate_move(strategy, matrix, our_team):
-    # Find the position and number of our creatures
-    for i in range(len(matrix)):
-        for j in range(len(matrix[i])):
-            if(matrix[i][j][0] == our_team):
-                current_x = j
-                current_y = i
-                nb_creature = matrix[i][j][1]
-                break
+def simulate_battle(E1, E2, attacking_species):
+    P = calculate_probability(E1, E2)
+    if np.random.random() < P:
+        survivors = np.random.binomial(E1, P)
+        return (attacking_species, survivors if survivors > 0 else 0)
+    else:
+        survivors = np.random.binomial(E2, 1 - P)
+        return ('human' if attacking_species in ['vampire', 'werewolf'] else attacking_species, survivors)
 
-    # Define the possible moves
-    possible_moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
+"""
+-------------------------------------------------------------------------------------
+- ALPHA BETA
+-------------------------------------------------------------------------------------
+"""
+class Strategy:
+    ATK = 1
+    DEF = 2
 
-    # If we are attacking, determine a legal random move
-    if(strategy == Strategy.ATK):
-        legal_moves = []
-        for dx, dy in possible_moves:
-            new_x = current_x + dx
-            new_y = current_y + dy
-            # Check if the new position is within the bounds of the matrix
-            if 0 <= new_x < len(matrix[0]) and 0 <= new_y < len(matrix):
-                legal_moves.append((dx, dy))
+SPECIES = {'vampire': 1, 'werewolf': 2, 'human': 0, 'Empty': None}
 
-        # Choose a random legal move
-        if legal_moves:
-            future_delta_x, future_delta_y = random.choice(legal_moves)
-        else:
-            # No legal moves available
-            return 0, []
+def heuristic(matrix, our_team):
+    our_count = 0
+    enemy_count = 0
+    human_count = 0
+    for y, row in enumerate(matrix):
+        for x, (species, count) in enumerate(row):
+            if species == our_team:
+                our_count += count
+            elif species == 'human':
+                human_count += 100 * count
+            elif species != 'Empty' and species != our_team:
+                enemy_count += count
+
+    score = our_count + human_count - enemy_count
+    return score
+
+# Implementation of the Alpha-Beta pruning algorithm
+def max_value(state, alpha, beta, depth, player, start_time, time_limit, depth_reached, move_list):
+    if depth == 0 or is_terminal(state) or time.time() - start_time > time_limit:
+        return heuristic(state, player), depth, move_list
+    value = float('-inf')
+    best_path = None
+    for move in generate_moves(state, player):
+        if time.time() - start_time > time_limit:
+            return heuristic(state, player), depth, move_list
+        new_state = result(state, move)
+        new_value, child_depth, path = min_value(new_state, alpha, beta, depth-1, player, start_time, time_limit, depth_reached, move_list + [move])
+        if new_value > value:
+            value = new_value
+            best_path = path
+            depth_reached = max(depth_reached, child_depth)
+        if value >= beta:
+            return value, depth_reached, best_path
+        alpha = max(alpha, value)
+    return value, depth_reached, best_path if best_path else move_list
+
+def min_value(state, alpha, beta, depth, player, start_time, time_limit, depth_reached, move_list):
+    if depth == 0 or is_terminal(state) or time.time() - start_time > time_limit:
+        return -heuristic(state, player), depth, move_list
+    value = float('inf')
+    best_path = None
+    for move in generate_moves(state, player):
+        if time.time() - start_time > time_limit:
+            return -heuristic(state, player), depth, move_list
+        new_state = result(state, move)
+        new_value, child_depth, path = max_value(new_state, alpha, beta, depth-1, player, start_time, time_limit, depth_reached, move_list + [move])
+        if new_value < value:
+            value = new_value
+            best_path = path
+            depth_reached = max(depth_reached, child_depth)
+        if value <= alpha:
+            return value, depth_reached, best_path
+        beta = min(beta, value)
+    return value, depth_reached, best_path if best_path else move_list
+
+
+def alpha_beta_search(state, depth, player, time_limit):
+    start_time = time.time()
+    best_score = float('-inf')
+    alpha = float('-inf')
+    beta = float('inf')
+    best_move = None
+    best_path = []  # To keep track of the best path
+    depth_reached = 0
+    
+    for move in generate_moves(state, player):
+        if time.time() - start_time > time_limit:
+            break
         
-    # Generate the move
-    moves = [(current_x, current_y, nb_creature, current_x+future_delta_x, current_y+future_delta_y)]
-    nb_move = 1
-    return nb_move, moves
+        value, child_depth, path = min_value(result(state, move), alpha, beta, depth-1, player, start_time, time_limit, depth_reached, [move])
+        depth_reached = max(depth_reached, child_depth)
+        if value > best_score:
+            best_score = value
+            best_move = move
+            best_path = path  # Update the best path
+    
+    print(f"Best Path: {best_path}, Best Score: {best_score}")
+    return best_move, depth_reached
 
+def is_terminal(state):
+    species_present = set()
+    for row in state:
+        for cell in row:
+            species_present.add(cell[0])
+    return len(species_present - {0}) <= 1
+
+def result(state, move):
+    new_state = [list(row) for row in state]
+    cur_x, cur_y, nb_creatures, new_x, new_y = move
+    moving_species = new_state[cur_y][cur_x][0]
+    moving_count = new_state[cur_y][cur_x][1]
+    nb_creatures = min(nb_creatures, moving_count)
+    new_state[cur_y][cur_x] = (moving_species, moving_count - nb_creatures)
+    target_species, target_count = new_state[new_y][new_x]
+
+    if target_species == 'human' and nb_creatures >= target_count:
+        new_state[new_y][new_x] = (moving_species, target_count + nb_creatures)
+    elif target_species == 'Empty':
+        new_state[new_y][new_x] = (moving_species, nb_creatures)
+    elif target_species != moving_species:
+        victorious_species, surviving_count = simulate_battle(nb_creatures, target_count, moving_species)
+        new_state[new_y][new_x] = (victorious_species, surviving_count)
+
+    if new_state[cur_y][cur_x][1] == 0:
+        new_state[cur_y][cur_x] = ('Empty', 0)
+
+    return new_state
+
+def generate_moves(state, our_species):
+    conversion_moves = []
+    other_moves = []
+    for y, row in enumerate(state):
+        for x, (species, count) in enumerate(row):
+            if species == our_species:
+                for dx in [-1, 0, 1]:
+                    for dy in [-1, 0, 1]:
+                        if dx == 0 and dy == 0:
+                            continue
+                        new_x, new_y = x + dx, y + dy
+                        if 0 <= new_x < len(row) and 0 <= new_y < len(state):
+                            target_species, target_count = state[new_y][new_x]
+                            if target_species == 'human':
+                                # Check if it's a conversion or a potential conversion move
+                                if count >= target_count:
+                                    conversion_moves.append((x, y, count, new_x, new_y))
+                                else:
+                                    # Add to other moves if it's not an immediate conversion but has potential
+                                    other_moves.append((x, y, count, new_x, new_y))
+                            elif target_species == 'Empty' or target_species != our_species:
+                                other_moves.append((x, y, count, new_x, new_y))
+    # Prioritize conversion moves
+    return conversion_moves + other_moves
+
+"""
+-------------------------------------------------------------------------------------
+- COMPUTE NEXT MOVE
+-------------------------------------------------------------------------------------
+"""
 def COMPUTE_NEXT_MOVE(matrix, our_team):
-    #Determine the strategy
-    strat = heuristic(matrix)
+    best_move, depth = alpha_beta_search(matrix, 15, our_team, 1.8)
+    nb_moves = 1 if best_move else 0
+    print(best_move, depth)
+    return nb_moves, [best_move]
 
-    #Determine the next moves based on the global strategy
-    nb_moves, moves = generate_move(strat, matrix, our_team)
-
-    #Update la matrice interne avec le moves
-
-    #Return the number of moves and moves 
-    return nb_moves, moves
-
+"""
+-------------------------------------------------------------------------------------
+- UPDATE GAME STATE
+-------------------------------------------------------------------------------------
+"""
 def UPDATE_GAME_STATE(message,matrix,hme):
     cmd = message[0]
     value = message[1]
@@ -115,10 +244,13 @@ def UPDATE_GAME_STATE(message,matrix,hme):
             if(h == 0 and v == 0 and w == 0):
                 matrix[r][c] = ('Empty', 0)
 
-        print("Updated matrix", matrix)
         return matrix
 
-
+"""
+-------------------------------------------------------------------------------------
+- PLAY GAME
+-------------------------------------------------------------------------------------
+"""
 def play_game(args):
     client_socket = ClientSocket(args.ip, args.port)
     name = input("Player name:")
@@ -140,20 +272,24 @@ def play_game(args):
     # map message
     message = client_socket.get_message()
     matrix, our_team = UPDATE_GAME_STATE(message,matrix,hme)
-    
+
     # start of the game
     while True:
-        time.sleep(0.2)
+        # time.sleep(0.5)
         message = client_socket.get_message()
         time_message_received = time.time()
         # upd message
         UPDATE_GAME_STATE(message,matrix,hme)
         if message[0] == "upd":
             nb_moves, moves = COMPUTE_NEXT_MOVE(matrix, our_team)
-            print(nb_moves, moves, our_team)
             client_socket.send_mov(nb_moves, moves)
             pass
 
+"""
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+- MAIN
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+"""
 if __name__ == '__main__':
     parser = ArgumentParser()
 

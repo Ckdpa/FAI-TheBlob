@@ -113,5 +113,4 @@ class ClientSocket:
         for move in moves:
             for data in move:
                 message += bytes([data])
-        print(message)
         self._socket.send("MOV".encode() + message)
