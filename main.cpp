@@ -8,7 +8,7 @@
 #include "server/messages/SETMessage.h"
 #include "server/messages/UPDMessage.h"
 
-bool init_game(Connection conn, const char* name) {
+bool init_game(Connection& conn, const char* name) {
     GameMessage *name_msg = new NMEMessage(name);
     conn.socket_write(*name_msg);
     delete name_msg;
@@ -16,7 +16,7 @@ bool init_game(Connection conn, const char* name) {
 }
 
 int main(int argc, char* argv[]) {
-    auto connection = Connection("localhost", 5555);
+    auto connection = Connection("localhost", 8080);
     if (connection.connect_socket() < 0) {
         return -1;
     }
@@ -55,6 +55,7 @@ int main(int argc, char* argv[]) {
                 game = new Game(dynamic_cast<SETMessage*>(message)->get_rows(),
                                 dynamic_cast<SETMessage*>(message)->get_rows(),
                                 GameTeam::HUMAN); // Set team to HUMAN for start, it will be updated in further messages.
+                std::cout << *game;
                 break;
             case GameMessage::MessageType::UPD:
                 game->update_state(dynamic_cast<UPDMessage*>(message)->get_updates());
