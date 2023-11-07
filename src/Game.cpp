@@ -82,3 +82,33 @@ void Game::update_state(const std::vector<Update>& updates) {
                 update.number_entities());
     }
 }
+
+std::vector<Move> Game::get_next_move(bool monoblob) {
+    auto home_board = boards_[static_cast<int>(current_team_)];
+    auto enemy_board = boards_[static_cast<int>(next_team())];
+    auto human_board = boards_[HUMAN_BOARD];
+    // Retrieves the groups
+    auto groups = std::vector<std::tuple<int, char, char>>();
+    for (int row = 0; row < rows_; row++) {
+        for (int col = 0; col < columns_; col++) {
+            char units = home_board.get(row * columns_ + col);
+            if (units) {
+                // We have units here
+                groups.emplace_back(units, row, col);
+            }
+        }
+    }
+    // Generate the legal moves for each group
+    for (auto& group : groups) {
+        char row = std::get<1>(group);
+        char col = std::get<2>(group);
+        if (row == 0) {
+
+        }
+    }
+    return std::vector<Move>();
+}
+
+int Game::static_eval() const {
+    return 0;
+}

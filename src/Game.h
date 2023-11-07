@@ -16,6 +16,7 @@
 
 #include "Update.h"
 #include "GameTeam.h"
+#include "Move.h"
 
 class Game {
 public:
@@ -25,8 +26,9 @@ public:
     void set_home(int row, int col);
     void set_humans(const std::vector<std::pair<const char, const char>>& humans_coordinates);
     void update_state(const std::vector<Update>& updates);
+    std::vector<Move> get_next_move(bool monoblob=true);
     [[nodiscard]] GameTeam next_team() const;
-
+    int static_eval() const;
     [[nodiscard]] std::queue<GameBoard> generate_moves() const; // Signature is not final
 private:
     char rows_;

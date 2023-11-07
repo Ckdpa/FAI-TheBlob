@@ -59,7 +59,13 @@ int main(int argc, char* argv[]) {
                 break;
             case GameMessage::MessageType::UPD:
                 game->update_state(dynamic_cast<UPDMessage*>(message)->get_updates());
-                std::cout << game;
+//                std::cout << game;
+                {
+                    // Generate the next move
+                    auto next_move = game->get_next_move();
+                    // Play the move
+                    connection.socket_write(UPDMessage(next_move));
+                }
                 break;
             case GameMessage::MessageType::MAP:
                 // Will not happen
