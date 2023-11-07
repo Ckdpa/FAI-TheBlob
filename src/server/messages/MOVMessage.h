@@ -6,7 +6,19 @@
 #define DOMINATORIX_MOVMESSAGE_H
 
 
-class MOVMessage {
+#include <vector>
+#include "GameMessage.h"
+#include "Move.h"
+
+class MOVMessage : public GameMessage {
+public:
+    std::string encode() const override;
+    MessageType get_message_type() const override;
+
+//    explicit MOVMessage(const char* data);
+    explicit MOVMessage(std::vector<Move>& moves);
+private:
+    std::vector<Move> moves_;
 
 };
 

@@ -20,6 +20,7 @@ public:
     SET,
     UPD,
     MAP,
+    MOV
 };
     GameMessage() = default;
     virtual ~GameMessage() = default;
