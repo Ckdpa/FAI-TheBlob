@@ -36,4 +36,6 @@ add_executable(Dominatorix
         src/GameTeam.h
         src/Move.h
         src/Move.cpp
+        src/server/messages/MOVMessage.h
+        src/server/messages/MOVMessage.cpp
 )
