@@ -25,23 +25,38 @@ def heuristic(matrix):
     return Strategy.ATK
 
 def generate_move(strategy, matrix, our_team):
-    #Determine general strategy, compute general state of the map and determine if we atk, def or cov.
+    # Find the position and number of our creatures
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
             if(matrix[i][j][0] == our_team):
-                current_x = i
-                current_y = j
+                current_x = j
+                current_y = i
                 nb_creature = matrix[i][j][1]
                 break
-    
-    possible_move = [0, 1, -1]
-    nb_move = 1
 
+    # Define the possible moves
+    possible_moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
+
+    # If we are attacking, determine a legal random move
     if(strategy == Strategy.ATK):
-        future_delta_x = random.choice(list(possible_move))
-        future_delta_y = random.choice(list(possible_move))
+        legal_moves = []
+        for dx, dy in possible_moves:
+            new_x = current_x + dx
+            new_y = current_y + dy
+            # Check if the new position is within the bounds of the matrix
+            if 0 <= new_x < len(matrix[0]) and 0 <= new_y < len(matrix):
+                legal_moves.append((dx, dy))
 
-    moves = [(current_y, current_x, nb_creature, current_y+future_delta_x, current_x+future_delta_y)]
+        # Choose a random legal move
+        if legal_moves:
+            future_delta_x, future_delta_y = random.choice(legal_moves)
+        else:
+            # No legal moves available
+            return 0, []
+        
+    # Generate the move
+    moves = [(current_x, current_y, nb_creature, current_x+future_delta_x, current_y+future_delta_y)]
+    nb_move = 1
     return nb_move, moves
 
 def COMPUTE_NEXT_MOVE(matrix, our_team):
@@ -80,15 +95,10 @@ def UPDATE_GAME_STATE(message,matrix,hme):
                 matrix[r][c] = ('werewolf', w)
     
         our_team = matrix[hme[1]][hme[0]][0]
-        print(our_team)
-        print(matrix)
         return matrix, our_team
     
     if cmd == 'upd':
-        print(message)
-        print(value)
         if(value == []):
-            print("<< Empty upd >>")
             return
         for element in value:
             c = element[0]
@@ -102,8 +112,10 @@ def UPDATE_GAME_STATE(message,matrix,hme):
                 matrix[r][c] = ('vampire', v)
             if w > 0:
                 matrix[r][c] = ('werewolf', w)
+            if(h == 0 and v == 0 and w == 0):
+                matrix[r][c] = ('Empty', 0)
 
-        print(matrix)
+        print("Updated matrix", matrix)
         return matrix
 
 
@@ -131,13 +143,14 @@ def play_game(args):
     
     # start of the game
     while True:
-        debug = input("Debug: ")
+        time.sleep(0.2)
         message = client_socket.get_message()
         time_message_received = time.time()
         # upd message
         UPDATE_GAME_STATE(message,matrix,hme)
         if message[0] == "upd":
             nb_moves, moves = COMPUTE_NEXT_MOVE(matrix, our_team)
+            print(nb_moves, moves, our_team)
             client_socket.send_mov(nb_moves, moves)
             pass
 
