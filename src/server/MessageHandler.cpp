@@ -4,11 +4,11 @@
 
 #include <iostream>
 #include "MessageHandler.h"
-#include "UPDMessage.h"
-#include "SETMessage.h"
-#include "HMEMessage.h"
-#include "BYEMessage.h"
-#include "ENDMessage.h"
+#include "server/messages/UPDMessage.h"
+#include "server/messages/SETMessage.h"
+#include "server/messages/HMEMessage.h"
+#include "server/messages/BYEMessage.h"
+#include "server/messages/ENDMessage.h"
 
 
 GameMessage* MessageHandler::parse_message_type(const std::string &bytes) {

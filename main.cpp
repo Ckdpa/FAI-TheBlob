@@ -2,11 +2,11 @@
 #include <unistd.h>
 #include "Game.h"
 #include "server/Connection.h"
-#include "server/NMEMessage.h"
-#include "server/HMEMessage.h"
-#include "server/HUMMessage.h"
-#include "server/SETMessage.h"
-#include "server/UPDMessage.h"
+#include "server/messages/NMEMessage.h"
+#include "server/messages/HMEMessage.h"
+#include "server/messages/HUMMessage.h"
+#include "server/messages/SETMessage.h"
+#include "server/messages/UPDMessage.h"
 
 bool init_game(Connection conn, const char* name) {
     GameMessage *name_msg = new NMEMessage(name);
@@ -32,16 +32,14 @@ int main(int argc, char* argv[]) {
         GameMessage* message = connection.read_socket();
         switch (message->get_message_type()) {
             case GameMessage::MessageType::END:
-                if (game != nullptr) {
-                    delete game;
-                }
+                delete game;
+                game = nullptr;
                 // Prepare for next game
                 init_game(connection, "Dominatorix");
                 break;
             case GameMessage::MessageType::BYE:
-                if (game != nullptr) {
-                    delete game;
-                }
+                delete game;
+                game = nullptr;
                 is_running = false;
                 break;
             case GameMessage::MessageType::HME:

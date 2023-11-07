@@ -6,7 +6,7 @@
 #define DOMINATORIX_MESSAGEHANDLER_H
 
 
-#include "GameMessage.h"
+#include "server/messages/GameMessage.h"
 
 class MessageHandler {
 public:

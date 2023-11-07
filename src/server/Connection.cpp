@@ -12,7 +12,7 @@
 #include <iostream>
 #include <cstring>
 #include <sys/poll.h>
-#include "MessageHandler.h"
+#include "server/MessageHandler.h"
 
 Connection::Connection(const std::string& ip, int port) {
 

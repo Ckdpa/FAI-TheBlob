@@ -8,7 +8,7 @@
 #include <string>
 #include <netinet/in.h>
 #include <sys/poll.h>
-#include "GameMessage.h"
+#include "server/messages/GameMessage.h"
 
 // Connect to the server using TCP/IP Socket on a given port and IP adress
 class Connection {
