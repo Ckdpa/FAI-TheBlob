@@ -5,8 +5,8 @@
 #include "Update.h"
 
 
-Update::Update(char starting_row, char ending_row, char number_entities, GameTeam& moving_team)
-: x_(starting_row), y_(ending_row), number_entities_(number_entities), moving_team_(moving_team){
+Update::Update(char row, char col, char number_entities, GameTeam& moving_team)
+: x_(row), y_(col), number_entities_(number_entities), moving_team_(moving_team){
 }
 
 GameTeam Update::get_moving_team() const {

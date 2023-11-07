@@ -9,7 +9,7 @@
 
 class Update {
 public:
-    Update(char starting_row, char ending_row, char number_entities, GameTeam& moving_team);
+    Update(char row, char col, char number_entities, GameTeam& moving_team);
 
     GameTeam get_moving_team() const;
     char get_x() const;
