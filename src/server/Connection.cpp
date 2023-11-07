@@ -15,8 +15,7 @@
 #include "server/MessageHandler.h"
 
 Connection::Connection(const std::string& ip, int port) {
-
-    ufds_.events = POLLIN;
+    ufds_[0].events = POLLIN;
     status_ = CONN_STATUS::DISCONNECTED;
     conn_info_.sin_family = AF_INET;
     conn_info_.sin_port = htons(port);
@@ -30,13 +29,12 @@ Connection::Connection(const std::string& ip, int port) {
 int Connection::connect_socket() {
 
     int connection_status;
-    ufds_.fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (ufds_.fd <= 0) {
+    ufds_[0].fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (ufds_[0].fd <= 0) {
         perror("Could not open socket");
     }
-    connection_status = connect(ufds_.fd, reinterpret_cast<const sockaddr *>(&conn_info_), sizeof(conn_info_));
+    connection_status = connect(ufds_[0].fd, reinterpret_cast<const sockaddr *>(&conn_info_), sizeof(conn_info_));
     if (connection_status != 0) {
-        std::cout << errno << std::endl;
         perror("Error connecting to server");
     }
     status_ = CONN_STATUS::CONNECTED;
@@ -47,8 +45,8 @@ Connection::~Connection() {
     close_connection();
 }
 
-int Connection::close_connection() const {
-    auto status = close(ufds_.fd);
+int Connection::close_connection(){
+    auto status = close(ufds_[0].fd);
     if (status < 0) {
         perror("Error closing connection");
     }
@@ -67,7 +65,7 @@ void Connection::socket_write(const GameMessage &message) {
     }
     size_t written_bytes = 0;
     while (written_bytes < strlen(data.c_str())) {
-        auto write_status = write(ufds_.fd, data.c_str() + written_bytes, strlen(data.c_str()) - written_bytes);
+        auto write_status = write(ufds_[0].fd, data.c_str() + written_bytes, strlen(data.c_str()) - written_bytes);
         if (write_status < 0) {
             std::cerr << "Error while writing message";
             status_ = CONN_STATUS::ERROR;
@@ -77,26 +75,23 @@ void Connection::socket_write(const GameMessage &message) {
 }
 
 bool Connection::pending_message() {
-    auto rv = poll(&ufds_, ufds_.fd, 1000);
-    std::cout << "Polling result is: " << rv << std::endl;
+    auto rv = poll(ufds_, 1, -1);
     if (rv == -1) {
         perror("poll"); // error occurred in poll()
-    } else if (rv == 0) {
-        return false;
-    } else if (ufds_.events & POLLIN) {
+    } else if (ufds_[0].revents & POLLIN) // Check for waiting "events"
+        {
         return true;
-    } else {
-        std::cerr << "Received message in other mode than POLLIN" << std::endl;
     }
     return false;
+
 }
 
 GameMessage *Connection::read_socket() {
-    size_t total_bytes = 0;
+//    size_t total_bytes = 0;
 //    size_t read_bytes = read(ufds_.fd, &buff_, 1024);
 //    std::cout << read_bytes << "Bytes read" << std::endl;
 //    total_bytes += read_bytes;
-    auto ret = recv(ufds_.fd, buff_, sizeof buff_, 0);
+    auto ret = recv(ufds_[0].fd, buff_, sizeof buff_, 0);
     std::cout << ret << std::endl;
 //    read_bytes = read(conn_, &buff_ + total_bytes, 1024 - total_bytes);
     std::cout << "Message reading done" << std::endl;

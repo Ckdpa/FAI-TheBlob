@@ -23,14 +23,14 @@ public:
     Connection(const std::string& ip, int port);
     ~Connection();
     int connect_socket();
-    int close_connection() const;
+    int close_connection();
     void socket_write(const GameMessage& message);
     bool pending_message();
     GameMessage* read_socket();
 private:
     struct sockaddr_in conn_info_{};
     CONN_STATUS status_;
-    struct pollfd ufds_{};
+    struct pollfd ufds_[1]{};
     char buff_[1024]{};
 };
 
