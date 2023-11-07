@@ -61,13 +61,13 @@ std::ostream &operator<<(std::ostream &os, const GameMessage &game) {
 }
 
 void Connection::socket_write(const GameMessage &message) {
-    const char* data = message.encode().c_str();
+    std::string data = message.encode();
     if (status_ != CONN_STATUS::CONNECTED) {
         std::cerr << "Socket is not connected, cannot write message";
     }
     size_t written_bytes = 0;
-    while (written_bytes < strlen(data)) {
-        auto write_status = write(ufds_.fd, data + written_bytes, strlen(data) - written_bytes);
+    while (written_bytes < strlen(data.c_str())) {
+        auto write_status = write(ufds_.fd, data.c_str() + written_bytes, strlen(data.c_str()) - written_bytes);
         if (write_status < 0) {
             std::cerr << "Error while writing message";
             status_ = CONN_STATUS::ERROR;
