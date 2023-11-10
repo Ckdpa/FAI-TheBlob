@@ -3,12 +3,13 @@ import random
 class GameNode:
     def __init__(self, matrix, player_turn):
         self.matrix = matrix  # 2D array representing the game board
-        self.player_turn = player_turn  # werewolf / vampire
-        # Compute the enemy
+        self.player_turn = player_turn  # the team playing at this Node
+        self.our_global_team = player_turn # A static memory of the global team
         if self.player_turn == 'werewolf':
-            self.enemy = 'vampire'
+            self.enemy = 'vampire' # Local to node
         else:
-            self.enemy = 'werewolf'
+            self.enemy = 'werewolf'# Local to node
+        
             
         # self.move_history = move_history if move_history is not None else []  # List of moves made in the game
 
@@ -104,27 +105,37 @@ class GameNode:
                 # Perform a random battle
                 print("Random Battle!")
                 self.matrix[new_x][new_y] = GameNode.simulate_battle(self, entity[1],target[1],False)
+        
+        # Swap node player and enemy
+        self.player_turn, self.enemy = self.enemy, self.player_turn
 
     def is_terminal(self):
         # Check is both teams still present
-        return not GameNode.check_monsters_presence(self.matrix)
+        return not GameNode.check_monsters_presence(self)
         
         # Check if the game is over (e.g., checkmate, stalemate, or other end conditions)
         # You need to implement this method based on your game's rules.
 
     def evaluate(self):
-        pass
+        # 1st Simple Heuristic:
+        score =  GameNode.monster_difference(self)
+
+        # Return -score if node is not the global team
+        if self.player_turn == self.our_global_team:
+            return score
+        else:
+            return -score
+
         # Evaluate the current game state and return a numeric score
         # This is your evaluation function, which considers factors like piece values, board control, etc.
         # You need to implement this method.
-
+ 
     def __str__(self):
         pass
         # Optionally, you can implement a method to print a user-friendly representation of the game state.
         # This is useful for debugging and displaying the board to users.
 
     # Helper functions for battles
-
     def calculate_probability(E1, E2): # Math seems correct
         if E1 == E2:
             return 0.5
@@ -207,11 +218,11 @@ class GameNode:
         return (winner, final_num)
         
     # Other helper functions
-    def check_monsters_presence(matrix):
+    def check_monsters_presence(self):
         vampire_found = False
         werewolf_found = False
 
-        for row in matrix:
+        for row in self.matrix:
             for item in row:
                 if item[0] == 'vampire':
                     print("found vamp")
@@ -221,4 +232,26 @@ class GameNode:
                     werewolf_found = True
 
         return vampire_found and werewolf_found
+    
+    def monster_difference(self):
+        # Current node team - enemy
+        diff = 0
+        player_sum = 0
+        for row in self.matrix:
+            for item in row:
+                if item[0] == self.player_turn:
+                    player_sum += item[1]
+        
+        enemy_sum = 0
+        for row in self.matrix:
+            for item in row:
+                if item[0] == self.enemy:
+                    enemy_sum += item[1]
+
+        print("Player sum: ", player_sum)
+        print("Enemy sum: ", enemy_sum)
+
+        diff = player_sum - enemy_sum
+
+        return diff
 
