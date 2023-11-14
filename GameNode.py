@@ -1,10 +1,12 @@
 import random
+import numpy as np
+import copy
 
 class GameNode:
-    def __init__(self, matrix, player_turn):
-        self.matrix = matrix  # 2D array representing the game board
+    def __init__(self, matrix, player_turn, global_team):
+        self.matrix = copy.copy(matrix)  # 2D array representing the game board
         self.player_turn = player_turn  # the team playing at this Node
-        self.our_global_team = player_turn # A static memory of the global team
+        self.our_global_team = global_team # A static memory of the global team
         if self.player_turn == 'werewolf':
             self.enemy = 'vampire' # Local to node
         else:
@@ -17,7 +19,7 @@ class GameNode:
         # Should output a list of all legal moves for current turn and matrix state
         # Will start by considering no splits
 
-        print("Generating moves")
+        # print("Generating moves")
         
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix[i])):
@@ -42,7 +44,7 @@ class GameNode:
             # Check if the new position is within the bounds of the matrix
             if 0 <= new_x < len(self.matrix[0]) and 0 <= new_y < len(self.matrix):
                 legal_deltas.append((dx, dy))
-                print("Legal move: ", dx, dy)
+                # print("Legal move: ", dx, dy)
 
         legal_moves = []
         # Generate move messages with correct format
@@ -73,7 +75,6 @@ class GameNode:
         target = self.matrix[new_x][new_y]
         if target[0] == 'Empty':
             # Replace the empty cell with the entity
-            print("Moving to empty cell")
             self.matrix[new_x][new_y] = entity
         elif target[0] == self.player_turn:
             # Check this later when considering splitting
@@ -105,6 +106,8 @@ class GameNode:
                 # Perform a random battle
                 print("Random Battle!")
                 self.matrix[new_x][new_y] = GameNode.simulate_battle(self, entity[1],target[1],False)
+
+        print('move applied to: ' + self.player_turn)
         
         # Swap node player and enemy
         self.player_turn, self.enemy = self.enemy, self.player_turn
@@ -116,17 +119,18 @@ class GameNode:
         # Check if the game is over (e.g., checkmate, stalemate, or other end conditions)
         # You need to implement this method based on your game's rules.
 
-    def evaluate(self):
+    def evaluate_prev_node(self):
+        # evaluate_prev_node returns the score for the node above (enemy)
         # 1st Simple Heuristic:
         score =  GameNode.monster_difference(self)
 
         # Return -score if node is not the global team
         if self.player_turn == self.our_global_team:
-            return score
-        else:
             return -score
+        else:
+            return score
 
-        # Evaluate the current game state and return a numeric score
+        # evaluate_prev_node the current game state and return a numeric score
         # This is your evaluation function, which considers factors like piece values, board control, etc.
         # You need to implement this method.
  
@@ -137,13 +141,14 @@ class GameNode:
 
     # Helper functions for battles
     def calculate_probability(E1, E2): # Math seems correct
-        if E1 == E2:
-            return 0.5
-        elif E1 < E2:
-            return E1 / (2 * E2)
-            # return 1 to debug
-        else:
-            return (E1/E2) - 0.5
+        # if E1 == E2:
+        #     return 0.5
+        # elif E1 < E2:
+        #     return E1 / (2 * E2)
+        #     # return 1 to debug
+        # else:
+        #     return (E1/E2) - 0.5
+        return 0.01 # make the AI risk averse
     
     def battle_outcome(E1, E2): # Math seems correct
         probability = GameNode.calculate_probability(E1, E2)
@@ -225,10 +230,10 @@ class GameNode:
         for row in self.matrix:
             for item in row:
                 if item[0] == 'vampire':
-                    print("found vamp")
+                    # print("found vamp")
                     vampire_found = True
                 elif item[0] == 'werewolf':
-                    print("found were")
+                    # print("found were")
                     werewolf_found = True
 
         return vampire_found and werewolf_found
@@ -248,10 +253,11 @@ class GameNode:
                 if item[0] == self.enemy:
                     enemy_sum += item[1]
 
-        print("Player sum: ", player_sum)
-        print("Enemy sum: ", enemy_sum)
+        # print("Player summ: ", player_sum)
+        # print("Enemy sum: ", enemy_sum)
 
-        diff = player_sum - enemy_sum
+        
+        diff = enemy_sum - player_sum
 
         return diff
 

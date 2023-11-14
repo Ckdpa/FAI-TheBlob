@@ -6,6 +6,10 @@ from enum import Enum
 import random
 import numpy as np
 import pickle
+from GameNode import GameNode
+from AlphaBeta import alpha_beta
+from AlphaBeta import find_best_move
+
 
 class Strategy(Enum):
     ATK = 1
@@ -127,6 +131,7 @@ def save_file(matrix,file_name):
 def play_game(args):
     client_socket = ClientSocket(args.ip, args.port)
     name = input("Player name:")
+    depth = input("Alpha Beta Depth:")
     client_socket.send_nme(name)
     
     # Init matrix
@@ -156,7 +161,8 @@ def play_game(args):
         # upd message
         UPDATE_GAME_STATE(message,matrix,hme)
         if message[0] == "upd":
-            nb_moves, moves = COMPUTE_NEXT_MOVE(matrix, our_team)
+            # nb_moves, moves = COMPUTE_NEXT_MOVE(matrix, our_team)
+            nb_moves, moves = find_best_move(GameNode(matrix, our_team, our_team), int(depth))
             print(nb_moves, moves, our_team)
             client_socket.send_mov(nb_moves, moves)
             print("--MOVES")
