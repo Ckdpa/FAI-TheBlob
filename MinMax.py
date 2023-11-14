@@ -20,7 +20,7 @@ def MinMax(node : GameNode, depth, maximizingPlayer):
         value = -float('inf')
         for move in node.generate_moves():
             # Create a child by copying, then applying move
-            child_node = GameNode(node.matrix, node.player_turn, node.our_global_team, node.move_history, depth-1)
+            child_node = GameNode(node.matrix, node.player_turn, node.our_global_team, node.move_history, depth-1, node.heuristic)
             child_node.apply_move(move[1][0]) #TODO ignoring nb_moves for now, change this later for splits
             value = max(value, MinMax(child_node, depth - 1, False))
         return value
@@ -28,7 +28,7 @@ def MinMax(node : GameNode, depth, maximizingPlayer):
     else:
         value = float('inf')
         for move in node.generate_moves():
-            child_node = GameNode(node.matrix, node.player_turn, node.our_global_team, node.move_history, depth-1)
+            child_node = GameNode(node.matrix, node.player_turn, node.our_global_team, node.move_history, depth-1, node.heuristic)
             child_node.apply_move(move[1][0])
             value = min(value, MinMax(child_node, depth - 1, True))
         return value
@@ -39,7 +39,7 @@ def find_best_minmax(node: GameNode, depth):
     best_move = None
     best_value = -float('inf')
     for move in node.generate_moves():
-        child_node = GameNode(node.matrix, node.player_turn, node.our_global_team, node.move_history, depth)
+        child_node = GameNode(node.matrix, node.player_turn, node.our_global_team, node.move_history, depth, node.heuristic)
         # print('first move:')
         # print(move)
         child_node.apply_move(move[1][0])

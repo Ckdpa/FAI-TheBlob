@@ -134,6 +134,7 @@ def play_game(args):
     client_socket = ClientSocket(args.ip, args.port)
     name = input("Player name:")
     depth = input("Alpha Beta Depth:")
+    heuristic = input("Heuristic (1=monster_difference or 2=monster_difference_distance): ")
     client_socket.send_nme(name)
     
     # Init matrix
@@ -166,7 +167,7 @@ def play_game(args):
             # nb_moves, moves = COMPUTE_NEXT_MOVE(matrix, our_team)
             # nb_moves, moves = find_best_move(GameNode(matrix, our_team, our_team), int(depth))
             save_file(matrix,"last_matrix.pkl")
-            nb_moves, moves = find_best_minmax(GameNode(matrix, our_team, our_team, [], 0), int(depth))
+            nb_moves, moves = find_best_minmax(GameNode(matrix, our_team, our_team, [], 0, heuristic), int(depth))
             print(nb_moves, moves, our_team)
             client_socket.send_mov(nb_moves, moves)
             print("--MOVES")

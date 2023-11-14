@@ -3,12 +3,13 @@ import numpy as np
 import copy
 
 class GameNode:
-    def __init__(self, matrix, player_turn, global_team, move_history, depth):
+    def __init__(self, matrix, player_turn, global_team, move_history, depth, heuristic):
         self.matrix = copy.copy(matrix)  # 2D array representing the game board
         self.player_turn = player_turn  # the team playing at this Node
         self.our_global_team = global_team # A static memory of the global team
         self.move_history = move_history
         self.depth = depth
+        self.heuristic = heuristic
         if self.player_turn == 'werewolf':
             self.enemy = 'vampire' # Local to node
         else:
@@ -123,19 +124,22 @@ class GameNode:
     def evaluate_prev_node(self):
         # the functions used should return the aboslute score
         # from the point of view of the previous node (enemy)
-        # 1st Simple Heuristic:
-        score =  GameNode.monster_difference(self)
-
         
-        
+        if(self.heuristic == 1):
+            # 1st Simple Heuristic:
+            score =  GameNode.monster_difference(self)
+        elif(self.heuristic == 2):
+            # 2nd Heuristic (distance):
+            score =  GameNode.monster_difference_distance(self)
+        else:
+            score = 0
         # Return -score if node is the global team
         # Since the parent node will be the global enemy
         if self.our_global_team == self.player_turn:
             return -score
         else:
             return score
-
-
+        
         # evaluate_prev_node the current game state and return a numeric score
         # This is your evaluation function, which considers factors like piece values, board control, etc.
         # You need to implement this method.
@@ -273,4 +277,8 @@ class GameNode:
         diff += self.depth
 
         return diff
+    
+    def monster_difference_distance(self):
+        #TODO
+        return 0
 
