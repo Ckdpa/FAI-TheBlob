@@ -1,10 +1,12 @@
 from GameNode import GameNode
+import random
 
 def MinMax(node : GameNode, depth, maximizingPlayer):
     # Check if the game is over
     if depth == 0 or node.is_terminal():
         if node.is_terminal():
             print("GAME END FOUND")
+            print(node.matrix)
         else:
             print("Max Depth")
         print("Node Depth")
@@ -47,6 +49,9 @@ def find_best_minmax(node: GameNode, depth):
         print('Current Value: ')
         print(value)
         if value > best_value:
+            best_move = move
+            best_value = value
+        if value == best_value and random.randint(0,1) == 1:
             best_move = move
             best_value = value
     return best_move

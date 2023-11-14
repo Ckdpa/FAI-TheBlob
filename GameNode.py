@@ -258,10 +258,15 @@ class GameNode:
             for item in row:
                 if item[0] == self.enemy:
                     enemy_sum += item[1]
+        
+        # Add additional points if the enemy dies
+        if enemy_sum == 0:
+            enemy_sum += -1000
+        if player_sum == 0:
+            player_sum += 1000
 
         # print("Player summ: ", player_sum)
         # print("Enemy sum: ", enemy_sum)
-
 
         diff = enemy_sum - player_sum 
 
