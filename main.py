@@ -9,6 +9,8 @@ import pickle
 from GameNode import GameNode
 from AlphaBeta import alpha_beta
 from AlphaBeta import find_best_move
+from MinMax import MinMax
+from MinMax import find_best_minmax
 
 
 class Strategy(Enum):
@@ -162,7 +164,9 @@ def play_game(args):
         UPDATE_GAME_STATE(message,matrix,hme)
         if message[0] == "upd":
             # nb_moves, moves = COMPUTE_NEXT_MOVE(matrix, our_team)
-            nb_moves, moves = find_best_move(GameNode(matrix, our_team, our_team), int(depth))
+            # nb_moves, moves = find_best_move(GameNode(matrix, our_team, our_team), int(depth))
+            save_file(matrix,"last_matrix.pkl")
+            nb_moves, moves = find_best_minmax(GameNode(matrix, our_team, our_team, [], 0), int(depth))
             print(nb_moves, moves, our_team)
             client_socket.send_mov(nb_moves, moves)
             print("--MOVES")

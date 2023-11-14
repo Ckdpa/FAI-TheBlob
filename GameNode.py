@@ -3,10 +3,12 @@ import numpy as np
 import copy
 
 class GameNode:
-    def __init__(self, matrix, player_turn, global_team):
+    def __init__(self, matrix, player_turn, global_team, move_history, depth):
         self.matrix = copy.copy(matrix)  # 2D array representing the game board
         self.player_turn = player_turn  # the team playing at this Node
         self.our_global_team = global_team # A static memory of the global team
+        self.move_history = move_history
+        self.depth = depth
         if self.player_turn == 'werewolf':
             self.enemy = 'vampire' # Local to node
         else:
@@ -62,7 +64,8 @@ class GameNode:
         # Givem a single move, this function needs to update it's matrix to show the result
         # This function could be use sequentially when we define mutilple moves per round
         # Also need toggle the self.player turn - however would not work with multiple moves above
-
+        print('Moving: ' + self.player_turn)
+        self.move_history.append(move)
         # Parse move
         old_y, old_x = move[0], move[1]
         new_y, new_x = move[3], move[4] # y is top down
@@ -83,7 +86,7 @@ class GameNode:
         elif target[0] == "human":
             print("Attackng Humans")
             # Check if entity has more units than the target
-            if entity[1] >= target[1]:
+            if entity[1] > target[1]:
                 # Transform humans into current entity
                 print("Won Battle")
                 self.matrix[new_x][new_y] = (entity[0], entity[1] + target[1])
@@ -95,19 +98,17 @@ class GameNode:
         else:
             print("Attacking Opponent")
             # Check if entity has 1.5x more units than the target
-            if entity[1] >= 1.5*target[1]:
+            if entity[1] >1.5*target[1]:
                 print("Won Battle - 1.5")
                 self.matrix[new_x][new_y] = entity
             # Check if target has 1.5x more units than the entity
-            if target[1] >= 1.5*entity[1]:
+            if target[1] > 1.5*entity[1]:
                 print("Lost Battle - 1.5")
                 self.matrix[new_x][new_y] = entity
             else:
                 # Perform a random battle
                 print("Random Battle!")
                 self.matrix[new_x][new_y] = GameNode.simulate_battle(self, entity[1],target[1],False)
-
-        print('move applied to: ' + self.player_turn)
         
         # Swap node player and enemy
         self.player_turn, self.enemy = self.enemy, self.player_turn
@@ -120,15 +121,20 @@ class GameNode:
         # You need to implement this method based on your game's rules.
 
     def evaluate_prev_node(self):
-        # evaluate_prev_node returns the score for the node above (enemy)
+        # the functions used should return the aboslute score
+        # from the point of view of the previous node (enemy)
         # 1st Simple Heuristic:
         score =  GameNode.monster_difference(self)
 
-        # Return -score if node is not the global team
-        if self.player_turn == self.our_global_team:
+        
+        
+        # Return -score if node is the global team
+        # Since the parent node will be the global enemy
+        if self.our_global_team == self.player_turn:
             return -score
         else:
             return score
+
 
         # evaluate_prev_node the current game state and return a numeric score
         # This is your evaluation function, which considers factors like piece values, board control, etc.
@@ -256,8 +262,10 @@ class GameNode:
         # print("Player summ: ", player_sum)
         # print("Enemy sum: ", enemy_sum)
 
-        
-        diff = enemy_sum - player_sum
+
+        diff = enemy_sum - player_sum 
+
+        diff += self.depth
 
         return diff
 
