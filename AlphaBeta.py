@@ -18,7 +18,7 @@ def alpha_beta(node : GameNode, depth, alpha, beta, maximizingPlayer):
         value = -float('inf')
         for move in node.generate_moves():
             # Create a child by copying, then applying move
-            child_node = GameNode(node.matrix, node.player_turn, node.our_global_team)
+            child_node = GameNode(node.matrix, node.player_turn, node.our_global_team, node.move_history, depth-1, node.heuristic)
             child_node.apply_move(move[1][0]) #TODO ignoring nb_moves for now, change this later for splits
             value = max(value, alpha_beta(child_node, depth - 1, alpha, beta, False))
             alpha = max(alpha, value)
@@ -29,7 +29,7 @@ def alpha_beta(node : GameNode, depth, alpha, beta, maximizingPlayer):
     else:
         value = float('inf')
         for move in node.generate_moves():
-            child_node = GameNode(node.matrix, node.player_turn, node.our_global_team)
+            child_node = GameNode(node.matrix, node.player_turn, node.our_global_team, node.move_history, depth-1, node.heuristic)
             child_node.apply_move(move[1][0])
             value = min(value, alpha_beta(child_node, depth - 1, alpha, beta, True))
             beta = min(beta, value)
@@ -43,7 +43,7 @@ def find_best_move(node: GameNode, depth):
     best_move = None
     best_value = -float('inf')
     for move in node.generate_moves():
-        child_node = GameNode(node.matrix, node.player_turn, node.our_global_team)
+        child_node = GameNode(node.matrix, node.player_turn, node.our_global_team, node.move_history, depth, node.heuristic)
         # print('first move:')
         # print(move)
         child_node.apply_move(move[1][0])

@@ -125,15 +125,18 @@ class GameNode:
         # the functions used should return the aboslute score
         # from the point of view of the previous node (enemy)
         
-        if(self.heuristic == 1):
-            # 1st Simple Heuristic:
-            score =  GameNode.monster_difference(self)
-        elif(self.heuristic == 2):
-            # 2nd Heuristic (distance):
-            score =  GameNode.monster_difference_distance(self)
-        else:
-            print(" =======  Invalid heuristic")
-            score = 'a'
+        # if(self.heuristic == 1):
+        #     # 1st Simple Heuristic:
+        #     score =  GameNode.monster_difference(self)
+        # elif(self.heuristic == 2):
+        #     # 2nd Heuristic (distance):
+        #     score =  GameNode.monster_difference_distance(self)
+        # else:
+        #     print(" =======  Invalid heuristic")
+        #     score = 'a'
+
+        score = GameNode.monster_difference_distance(self)
+
         # Return -score if node is the global team
         # Since the parent node will be the global enemy
         if self.our_global_team == self.player_turn:
@@ -296,11 +299,11 @@ class GameNode:
                 if item[0] == self.enemy:
                     enemy_sum += item[1]
         
-        # Add additional points if the enemy dies
+        # Return large score if enemy dies
         if enemy_sum == 0:
-            enemy_sum += -1000
+            return -1000
         if player_sum == 0:
-            player_sum += 1000
+            return 1000
 
         # Get the distance to the closest human
         enemy = None
@@ -322,7 +325,7 @@ class GameNode:
         # Calculate distance
         distances = []
         for human in humans:
-            distances.append(np.linalg.norm(np.array(enemy) - np.array(human)))
+            distances.append(abs(human[0] - enemy[0]) + abs(human[1] - enemy[1]))
 
         print(distances)
 
