@@ -132,7 +132,8 @@ class GameNode:
             # 2nd Heuristic (distance):
             score =  GameNode.monster_difference_distance(self)
         else:
-            score = 0
+            print(" =======  Invalid heuristic")
+            score = 'a'
         # Return -score if node is the global team
         # Since the parent node will be the global enemy
         if self.our_global_team == self.player_turn:
@@ -279,6 +280,57 @@ class GameNode:
         return diff
     
     def monster_difference_distance(self):
-        #TODO
-        return 0
+        # Same as above but reward proximity to humans
+
+        # Current node team - enemy
+        diff = 0
+        player_sum = 0
+        for row in self.matrix:
+            for item in row:
+                if item[0] == self.player_turn:
+                    player_sum += item[1]
+        
+        enemy_sum = 0
+        for row in self.matrix:
+            for item in row:
+                if item[0] == self.enemy:
+                    enemy_sum += item[1]
+        
+        # Add additional points if the enemy dies
+        if enemy_sum == 0:
+            enemy_sum += -1000
+        if player_sum == 0:
+            player_sum += 1000
+
+        # Get the distance to the closest human
+        enemy = None
+        humans = []
+
+        # Get enemy location
+        for x, row in enumerate(self.matrix):
+            for y, item in enumerate(row):
+                if item[0] == self.enemy:
+                    enemy = (x, y)
+        
+        # Get Human location
+        humans = []
+        for x, row in enumerate(self.matrix):
+            for y, item in enumerate(row):
+                if item[0] == 'human':
+                    humans.append((x, y))
+        
+        # Calculate distance
+        distances = []
+        for human in humans:
+            distances.append(np.linalg.norm(np.array(enemy) - np.array(human)))
+
+        print(distances)
+
+        min_dist = min(distances)
+
+        diff = enemy_sum - player_sum - min_dist
+
+        diff += self.depth
+
+        return diff
 
