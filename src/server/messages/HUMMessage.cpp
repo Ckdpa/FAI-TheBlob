@@ -8,7 +8,7 @@ std::string HUMMessage::encode() const {
     return nullptr; // We do not send encode messages
 }
 
-HUMMessage::HUMMessage(const char *data) {
+HUMMessage::HUMMessage(std::string data) {
     for (auto i = 1; i < data[0]; i+= 2) {
         humans_coordinates_.emplace_back(data[i], data[i + 1]);
     }

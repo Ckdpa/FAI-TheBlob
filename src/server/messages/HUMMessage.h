@@ -14,7 +14,7 @@ public:
     std::string encode() const override;
     MessageType get_message_type() const override;
 
-    explicit HUMMessage(const char* data);
+    explicit HUMMessage(std::string data);
 
     std::vector<std::pair<const char, const char>> get_human_coordinates_() const;
 private:
