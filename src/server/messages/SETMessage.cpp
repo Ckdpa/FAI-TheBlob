@@ -8,7 +8,7 @@ std::string SETMessage::encode() const {
     return nullptr; // We should no send SET messages
 }
 
-SETMessage::SETMessage(const char* data)
+SETMessage::SETMessage(std::string data)
 :rows_(data[0]), columns_(data[1]){
 }
 
