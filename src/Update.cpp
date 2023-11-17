@@ -5,12 +5,8 @@
 #include "Update.h"
 
 
-Update::Update(char row, char col, char number_entities, GameTeam& moving_team)
-: x_(row), y_(col), number_entities_(number_entities), moving_team_(moving_team){
-}
-
-GameTeam Update::get_moving_team() const {
-    return moving_team_;
+Update::Update(char row, char col, char human_update, char vampire_update, char werewolve_update)
+: x_(row), y_(col), human_update_(human_update), vampire_update_(vampire_update), werewolve_update_(werewolve_update){
 }
 
 char Update::get_x() const {
@@ -21,6 +17,14 @@ char Update::get_y() const {
     return y_;
 }
 
-char Update::number_entities() const {
-    return number_entities_;
+char Update::get_human_update() const {
+    return human_update_;
+}
+
+char Update::get_vampire_update() const {
+    return vampire_update_;
+}
+
+char Update::get_werewolve_update() const {
+    return werewolve_update_;
 }

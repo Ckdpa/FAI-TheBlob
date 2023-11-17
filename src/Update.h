@@ -9,17 +9,19 @@
 
 class Update {
 public:
-    Update(char row, char col, char number_entities, GameTeam& moving_team);
+    Update(char row, char col, char human_update, char vampire_update, char werewolve_update);
 
-    GameTeam get_moving_team() const;
     char get_x() const;
     char get_y() const;
-    char number_entities() const;
+    char get_human_update() const;
+    char get_vampire_update() const;
+    char get_werewolve_update() const;
 private:
      char x_;
      char y_;
-     char number_entities_;
-     GameTeam moving_team_;
+     char human_update_;
+     char vampire_update_;
+     char werewolve_update_;
 };
 
 

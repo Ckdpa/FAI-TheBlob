@@ -12,38 +12,27 @@ std::string UPDMessage::encode() const {
     std::stringstream encoded_UPD("UPD");
 
     std::array<char, 3> moving_entities{};
-    encoded_UPD << static_cast<char>(moves_.size());
-    for (auto move : moves_) {
-        moving_entities.fill(0);
-        moving_entities[static_cast<int>(move.get_moving_team())] = move.number_entities();
-        encoded_UPD << move.get_x() << move.get_y(); // Coordinates
-        encoded_UPD << moving_entities[static_cast<int>(GameTeam::HUMAN)]; // H
-        encoded_UPD << moving_entities[static_cast<int>(GameTeam::VAMPIRE)]; // V
-        encoded_UPD << moving_entities[static_cast<int>(GameTeam::WEREWOLF)]; // W
+    encoded_UPD << static_cast<char>(updates_.size());
+    for (auto update : updates_) {
+        encoded_UPD << update.get_x() << update.get_y(); // Coordinates
+        encoded_UPD << update.get_human_update() << update.get_vampire_update() << update.get_werewolve_update(); // Teams
     }
     return encoded_UPD.str();
 }
 
-UPDMessage::UPDMessage(const char *data) {
+UPDMessage::UPDMessage(std::string data) {
     for (char i = 1; i < data[0]; i += 5) {
-        GameTeam moving_team;
-        char moving_entities;
-        char team = 0;
-        while (data[i + team] != 0) {
-            team++; // Look for the moving team
-        }
-        moving_team = GameTeam(data[i + team]);
-        moving_entities = data[i+2 + team];
-        moves_.emplace_back(
+        updates_.emplace_back(
             data[i],
             data[i + 1],
-            moving_entities,
-            moving_team);
+            data[i + 2],
+            data[i + 3],
+            data[i + 4]);
     }
 }
 
-UPDMessage::UPDMessage(std::vector<Update>& moves)
-:moves_(std::move(moves)){
+UPDMessage::UPDMessage(std::vector<Update>& updates)
+:updates_(std::move(updates)){
 }
 
 GameMessage::MessageType UPDMessage::get_message_type() const {
@@ -51,5 +40,5 @@ GameMessage::MessageType UPDMessage::get_message_type() const {
 }
 
 std::vector<Update> UPDMessage::get_updates() const {
-    return moves_;
+    return updates_;
 }

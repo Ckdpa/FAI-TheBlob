@@ -15,12 +15,12 @@ public:
     std::string encode() const override;
     MessageType get_message_type() const override;
 
-    explicit UPDMessage(const char* data);
-    explicit UPDMessage(std::vector<Update>& moves);
+    explicit UPDMessage(std::string data);
+    explicit UPDMessage(std::vector<Update>& updates);
 
     std::vector<Update> get_updates() const;
 private:
-    std::vector<Update> moves_;
+    std::vector<Update> updates_;
 };
 
 
