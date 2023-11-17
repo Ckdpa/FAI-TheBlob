@@ -24,8 +24,8 @@ std::string MAPMessage::encode() const {
 MAPMessage::MAPMessage(std::string data) {
     for (char i = 1; i < data[0] * 5; i += 5) {
         updates_.emplace_back(
-            data[i],
             data[i + 1],
+            data[i],
             data[i + 2],
             data[i + 3],
             data[i + 4]);
