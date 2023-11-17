@@ -31,7 +31,7 @@ private:
 */
 public:
 
-    Connection(const std::string& ip, int port);
+    Connection(const std::string& ip, unsigned short port);
     ~Connection();
     int close_connection();
     int connect_socket();

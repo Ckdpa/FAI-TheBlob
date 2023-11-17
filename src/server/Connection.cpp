@@ -13,6 +13,7 @@
 */
 // Windows
 #include <winsock2.h>
+#pragma comment(lib, "ws2_32.lib")
 #include <ws2tcpip.h>
 #include <iostream>
 #include <stdexcept>
@@ -108,7 +109,7 @@ GameMessage *Connection::read_socket() {
 }
 */
 
-Connection::Connection(const std::string& ip, int port) {
+Connection::Connection(const std::string& ip, unsigned short port) {
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
         std::cerr << "Failed to initialize Winsock\n";
@@ -119,8 +120,9 @@ Connection::Connection(const std::string& ip, int port) {
     conn_info_.sin_family = AF_INET;
     
     conn_info_.sin_port = htons(port);
-    conn_info_.sin_addr.s_addr = inet_addr(ip.c_str());
-//    inet_pton(AF_INET, ip.c_str(), &conn_info_.sin_addr);
+    if (InetPton(AF_INET, ip.c_str(), &conn_info_.sin_addr.s_addr) != 1) {
+        std::cerr << "Invalid IP adress" << std::endl;
+    }
 }
 
 Connection::~Connection() {
@@ -161,7 +163,7 @@ void Connection::socket_write(const GameMessage& message) {
         return;
     }
 
-    size_t written_bytes = 0;
+    int written_bytes = 0;
     while (written_bytes < data.size()) {
         auto write_status = send(socket_, data.c_str() + written_bytes, data.size() - written_bytes, 0);
         if (write_status == SOCKET_ERROR) {
