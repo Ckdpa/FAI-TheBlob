@@ -125,19 +125,23 @@ class GameNode:
         # the functions used should return the aboslute score
         # from the point of view of the previous node (enemy)
         
-        # if(self.heuristic == 1):
-        #     # 1st Simple Heuristic:
-        #     score =  GameNode.monster_difference(self)
-        # elif(self.heuristic == 2):
-        #     # 2nd Heuristic (distance):
-        #     score =  GameNode.monster_difference_distance(self)
-        # else:
-        #     print(" =======  Invalid heuristic")
-        #     score = 'a'
         print('------ HEURISTIC --- ')
         print(self.heuristic)
+        print(type(self.heuristic))
 
-        score = GameNode.monster_difference_distance(self)
+        # Dynamic heuristic
+        if(self.heuristic == 1):
+            # 1st Simple Heuristic:
+            score =  GameNode.monster_difference(self)
+            print(' HEURISTIC 1 CONFIRMED')
+        elif(self.heuristic == 2):
+            # 2nd Heuristic (distance):
+            score =  GameNode.monster_difference_distance(self)
+        else:
+            print(" =======  Invalid heuristic")
+            score = 0
+
+        # score = GameNode.monster_difference_distance(self)
 
         # Return -score if node is the global team
         # Since the parent node will be the global enemy
