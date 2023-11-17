@@ -134,6 +134,8 @@ class GameNode:
         # else:
         #     print(" =======  Invalid heuristic")
         #     score = 'a'
+        print('------ HEURISTIC --- ')
+        print(self.heuristic)
 
         score = GameNode.monster_difference_distance(self)
 
@@ -329,7 +331,10 @@ class GameNode:
 
         print(distances)
 
-        min_dist = min(distances)
+        min_dist = 0
+
+        if len(distances) != 0:
+            min_dist = min(distances)
 
         diff = enemy_sum - player_sum - min_dist
 
