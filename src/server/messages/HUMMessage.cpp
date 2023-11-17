@@ -9,7 +9,7 @@ std::string HUMMessage::encode() const {
 }
 
 HUMMessage::HUMMessage(std::string data) {
-    for (auto i = 1; i < data[0]; i+= 2) {
+    for (char i = 1; i < data[0]; i+= 2) {
         humans_coordinates_.emplace_back(data[i], data[i + 1]);
     }
 }
