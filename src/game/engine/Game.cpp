@@ -13,11 +13,11 @@ std::ostream &operator<<(std::ostream &os, const Game &game) {
     for (char row = 0; row < game.rows_; row++) {
         for (char col = 0; col < game.columns_; col++) {
             if (game.boards_[HUMAN_BOARD].get(row, col)) {
-                os << std::setfill(' ') << std::setw(3) << game.boards_[HUMAN_BOARD].get(row, col) << 'H';
+                os << std::setfill(' ') << std::setw(3) << 0 + game.boards_[HUMAN_BOARD].get(row, col) << 'H';
             } else if (game.boards_[VAMPIRE_BOARD].get(row, col)) {
-                os << std::setfill(' ') << std::setw(3) << game.boards_[VAMPIRE_BOARD].get(row, col) << 'V';
+                os << std::setfill(' ') << std::setw(3) << 0 + game.boards_[VAMPIRE_BOARD].get(row, col) << 'V';
             } else if (game.boards_[WEREWOLF_BOARD].get(row, col)) {
-                os << std::setfill(' ') << std::setw(3) << game.boards_[WEREWOLF_BOARD].get(row, col) << 'W';
+                os << std::setfill(' ') << std::setw(3) << 0 + game.boards_[WEREWOLF_BOARD].get(row, col) << 'W';
             } else {
                 os << std::setfill(' ') << std::setw(4) <<  0;
             }

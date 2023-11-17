@@ -40,8 +40,8 @@ add_executable(Dominatorix
         src/game/engine/GameTeam.h
         src/game/engine/Move.h
         src/game/engine/Move.cpp
-        src/game/engine/GameTree.cpp
-        src/game/engine/GameTree.h
+        src/game/engine/GameNode.cpp
+        src/game/engine/GameNode.h
 )
 
 target_link_libraries(Dominatorix ws2_32)
