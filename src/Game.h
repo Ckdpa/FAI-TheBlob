@@ -23,7 +23,7 @@ public:
     Game(char rows, char columns, GameTeam team);
     ~Game() = default;
     friend std::ostream& operator<<(std::ostream& os, const Game& game);
-    void set_home(int row, int col);
+    void set_home(char row, char col);
     void set_humans(const std::vector<std::pair<const char, const char>>& humans_coordinates);
     void update_state(const std::vector<Update>& updates);
     std::vector<Move> get_next_move(bool monoblob=true);

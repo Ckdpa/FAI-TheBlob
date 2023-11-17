@@ -8,15 +8,15 @@
 std::ostream &operator<<(std::ostream &os, const Game &game) {
     os << "Next team:" << static_cast<int>(game.next_team()) << std::endl;
     int cell_idx; // Iterate on the boards
-    int entity_count;
-    for (auto row = 0; row < game.rows_; row++) {
-        for (auto col = 0; col < game.columns_; col++) {
+    char entity_count;
+    for (char row = 0; row < game.rows_; row++) {
+        for (char col = 0; col < game.columns_; col++) {
             if ((entity_count = game.boards_[HUMAN_BOARD].get(row, col))) {
-                os << std::setfill(' ') << std::setw(3) << entity_count << 'H';
+                os << std::setfill(' ') << std::setw(3) << 0 + entity_count << 'H';
             } else if ((entity_count = game.boards_[VAMPIRE_BOARD].get(row, col))) {
-                os << std::setfill(' ') << std::setw(3) << entity_count << 'V';
+                os << std::setfill(' ') << std::setw(3) << 0 + entity_count << 'V';
             } else if ((entity_count = game.boards_[WEREWOLF_BOARD].get(row, col))) {
-                os << std::setfill(' ') << std::setw(3) << entity_count << 'W';
+                os << std::setfill(' ') << std::setw(3) << 0 + entity_count << 'W';
             } else {
                 os << std::setfill(' ') << std::setw(4) <<  0;
             }
@@ -47,8 +47,8 @@ std::queue<GameBoard> Game::generate_moves() const {
     const GameBoard current_board = boards_[static_cast<char>(current_team_)];
     // Ideally, we define or inherit goals and each goal generates moves differently
     // For example, for each group of creatures, should we split the group ? How many creatures to split ?
-    for (int row = 0; row < rows_; row++) {
-        for (int column = 0; column < columns_; column++) {
+    for (char row = 0; row < rows_; row++) {
+        for (char column = 0; column < columns_; column++) {
             auto creature_group = current_board.get(row, column);
             if (creature_group) {
 
@@ -59,7 +59,7 @@ std::queue<GameBoard> Game::generate_moves() const {
     return {};
 }
 
-void Game::set_home(int row, int col) {
+void Game::set_home(char row, char col) {
     current_team_ = static_cast<GameTeam>(
             (boards_[WEREWOLF_BOARD].get(row, col) & static_cast<int>(GameTeam::WEREWOLF)) |
             (boards_[VAMPIRE_BOARD].get(row, col) & static_cast<int>(GameTeam::VAMPIRE))
@@ -83,13 +83,13 @@ void Game::update_state(const std::vector<Update>& updates) {
 }
 
 std::vector<Move> Game::get_next_move(bool monoblob) {
-    auto home_board = boards_[static_cast<int>(current_team_)];
-    auto enemy_board = boards_[static_cast<int>(next_team())];
-    auto human_board = boards_[HUMAN_BOARD];
+    auto& home_board = boards_[static_cast<int>(current_team_)];
+    auto& enemy_board = boards_[static_cast<int>(next_team())];
+    auto& human_board = boards_[HUMAN_BOARD];
     // Retrieves the groups
     auto groups = std::vector<std::tuple<int, char, char>>();
-    for (int row = 0; row < rows_; row++) {
-        for (int col = 0; col < columns_; col++) {
+    for (char row = 0; row < rows_; row++) {
+        for (char col = 0; col < columns_; col++) {
             char units = home_board.get(row, col);
             if (units) {
                 // We have units here
@@ -104,8 +104,11 @@ std::vector<Move> Game::get_next_move(bool monoblob) {
         if (row == 0) {
 
         }
+        else if (col == 0) {
+
+        }
     }
-    return std::vector<Move>();
+    return {};
 }
 
 int Game::static_eval() const {
