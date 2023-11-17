@@ -8,7 +8,7 @@
 GameBoard::GameBoard(char rows, char columns)
 {
     // Type is not correct, this allocates too much space
-    board_ = new char[rows * columns];
+    board_ = new char[rows * columns]();
     rows_ = rows;
     columns_ = columns;
 }
@@ -31,11 +31,11 @@ void GameBoard::set(int index, char value) {
 }
 
 
-char GameBoard::get(int row, int column) const {
+char GameBoard::get(char row, char column) const {
     return get(row * columns_ + column);
 }
 
-void GameBoard::set(int row, int column, char value) {
+void GameBoard::set(char row, char column, char value) {
     set(row * columns_ + column, value);
 }
 

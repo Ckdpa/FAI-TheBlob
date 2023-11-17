@@ -12,8 +12,8 @@
 class GameBoard {
 private:
     char* board_;
-    int rows_;
-    int columns_;
+    char rows_;
+    char columns_;
     
     void set(int index, char value);
     char get(int index) const;
@@ -21,8 +21,8 @@ public:
     GameBoard(char rows, char columns);
     ~GameBoard();
     friend std::ostream& operator<<(std::ostream& os, const GameBoard& game);
-    void set(int row, int column, char value);
-    char get(int row, int column) const;
+    void set(char row, char column, char value);
+    char get(char row, char column) const;
 };
 
 
