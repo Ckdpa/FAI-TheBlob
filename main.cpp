@@ -1,7 +1,7 @@
 #include <iostream>
 // #include <unistd.h> Not available on Windows
 #include <io.h>
-#include "game/Game.h"
+#include "game/engine/Game.h"
 #include "server/Connection.h"
 #include "server/messages/NMEMessage.h"
 #include "server/messages/HMEMessage.h"

@@ -8,7 +8,7 @@
 
 #include <vector>
 #include "GameMessage.h"
-#include "game/Move.h"
+#include "game/engine/Move.h"
 
 class MOVMessage : public GameMessage {
 public:

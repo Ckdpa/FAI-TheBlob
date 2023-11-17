@@ -8,7 +8,7 @@
 
 #include <vector>
 #include "GameMessage.h"
-#include "game/Update.h"
+#include "game/engine/Update.h"
 
 class UPDMessage : public GameMessage {
 public:

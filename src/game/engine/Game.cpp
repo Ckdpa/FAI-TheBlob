@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <iostream>
 #include <tuple>
+#include <cmath>
 #include "Game.h"
 
 std::ostream &operator<<(std::ostream &os, const Game &game) {
@@ -75,7 +76,7 @@ std::vector<std::vector<Move>> Game::generate_moves() const {
                 // Check if the move is in boundaries
                 if (target_row >= 0 && target_row < rows_ && target_col >= 0 && target_col < columns_) {
                     // Do not generate obviously losing moves : cell is occupied and too powerful for the group
-                    if (human_board.get(target_row, target_col) > entities_number or enemy_board.get(target_col, target_row) >= ceil(1.5 * entities_number)) {
+                    if (human_board.get(target_row, target_col) > entities_number or enemy_board.get(target_col, target_row) >= std::ceil(1.5 * entities_number)) {
                         continue;
                     } 
                     generated_moves.back().emplace_back(row, col, target_row, target_col, entities_number);

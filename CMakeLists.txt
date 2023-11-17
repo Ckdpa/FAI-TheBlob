@@ -6,11 +6,11 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(src)
 
 add_executable(Dominatorix
-        src/game/GameBoard.cpp
-        src/game/GameBoard.h
+        src/game/engine/GameBoard.cpp
+        src/game/engine/GameBoard.h
         main.cpp
-        src/game/Game.h
-        src/game/Game.cpp
+        src/game/engine/Game.h
+        src/game/engine/Game.cpp
         src/server/Connection.h
         src/server/Connection.cpp
         src/server/MessageHandler.h
@@ -35,13 +35,15 @@ add_executable(Dominatorix
         src/server/messages/HMEMessage.cpp
         src/server/messages/MOVMessage.h
         src/server/messages/MOVMessage.cpp
-        src/game/Update.h
-        src/game/Update.cpp
-        src/game/GameTeam.h
-        src/game/Move.h
-        src/game/Move.cpp
+        src/game/engine/Update.h
+        src/game/engine/Update.cpp
+        src/game/engine/GameTeam.h
+        src/game/engine/Move.h
+        src/game/engine/Move.cpp
+        src/game/engine/GameTree.cpp
+        src/game/engine/GameTree.h
 )
 
 target_link_libraries(Dominatorix ws2_32)
 
-target_compile_options(Dominatorix PRIVATE /W4)
+# target_compile_options(Dominatorix PRIVATE /W4)
