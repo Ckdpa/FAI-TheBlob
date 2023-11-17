@@ -26,10 +26,9 @@ public:
     void set_home(char row, char col);
     void set_humans(const std::vector<std::pair<const char, const char>>& humans_coordinates);
     void update_state(const std::vector<Update>& updates);
-    std::vector<Move> get_next_move(bool monoblob=true);
     [[nodiscard]] GameTeam next_team() const;
     int static_eval() const;
-    [[nodiscard]] std::queue<GameBoard> generate_moves() const; // Signature is not final
+    std::vector<std::vector<Move>> generate_moves() const;
 private:
     char rows_;
     char columns_;
