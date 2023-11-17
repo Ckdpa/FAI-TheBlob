@@ -43,3 +43,5 @@ add_executable(Dominatorix
 )
 
 target_link_libraries(Dominatorix ws2_32)
+
+target_compile_options(Dominatorix PRIVATE /W4)
