@@ -13,7 +13,7 @@ public:
     std::string encode() const override;
     MessageType get_message_type() const override;
 
-    explicit HMEMessage(const char* data);
+    explicit HMEMessage(std::string data);
 
     char get_starting_row() const;
     char get_starting_col() const;

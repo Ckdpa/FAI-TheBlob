@@ -8,7 +8,7 @@ std::string HMEMessage::encode() const {
     return nullptr; // We should not send this message
 }
 
-HMEMessage::HMEMessage(const char *data)
+HMEMessage::HMEMessage(std::string data)
 :row_(data[0]), col_(data[1]){
 
 }
