@@ -6,20 +6,14 @@
 
 
 GameBoard::GameBoard(char rows, char columns)
+:rows_(rows), columns_(columns), board_(rows * columns, 0)
 {
-    // Type is not correct, this allocates too much space
-    board_ = new char[rows * columns]();
-    rows_ = rows;
-    columns_ = columns;
 }
 
-GameBoard::~GameBoard() {
-    delete[] board_;
-}
+GameBoard::~GameBoard() = default;
 
 std::ostream &operator<<(std::ostream &os, const GameBoard &game) {
-    os << "Board is :" << *game.board_ << std::endl;
-    return os;
+    // TODO update implementation
 }
 
 char GameBoard::get(int index) const {

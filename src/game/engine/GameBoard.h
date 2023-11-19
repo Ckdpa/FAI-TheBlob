@@ -7,11 +7,12 @@
 
 #include <ostream>
 #include <bitset>
+#include <vector>
 
 // This class is meant to efficiently store the board representation
 class GameBoard {
 private:
-    char* board_;
+    std::vector<char> board_;
     char rows_;
     char columns_;
     
