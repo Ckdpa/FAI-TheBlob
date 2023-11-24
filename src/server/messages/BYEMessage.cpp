@@ -5,7 +5,7 @@
 #include "BYEMessage.h"
 
 std::string BYEMessage::encode() const {
-    return nullptr;
+    return "ERROR";
 }
 
 GameMessage::MessageType BYEMessage::get_message_type() const {

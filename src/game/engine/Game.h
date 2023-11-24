@@ -8,6 +8,7 @@
 
 #include <queue>
 #include <array>
+#include <set>
 #include "GameBoard.h"
 
 #define HUMAN_BOARD 2
@@ -17,6 +18,7 @@
 #include "Update.h"
 #include "GameTeam.h"
 #include "Move.h"
+
 
 class Game {
 public:
@@ -28,8 +30,9 @@ public:
     void update_state(const std::vector<Update>& updates);
     [[nodiscard]] GameTeam next_team() const;
     int static_eval() const;
-    std::vector<std::vector<Move>> generate_moves() const;
+    std::set<Move> generate_legal_moves() const;
 private:
+    std::vector<std::pair<char, std::vector<std::pair<char, char>>>> generate_per_group_moves() const;
     char rows_;
     char columns_;
     std::array<GameBoard, 3> boards_;

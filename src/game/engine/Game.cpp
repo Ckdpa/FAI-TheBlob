@@ -7,6 +7,7 @@
 #include <tuple>
 #include <cmath>
 #include "Game.h"
+#include <ranges>
 
 std::ostream &operator<<(std::ostream &os, const Game &game) {
     os << "Next team:" << static_cast<int>(game.next_team()) << std::endl;
@@ -44,47 +45,37 @@ GameTeam Game::next_team() const {
     return static_cast<GameTeam>(1 - static_cast<int>(current_team_));
 }
 
-std::vector<std::vector<Move>> Game::generate_moves() const {
+std::vector<std::pair<char, std::vector<std::pair<char, char>>>> Game::generate_per_group_moves() const {
     auto& home_board = boards_[static_cast<int>(current_team_)];
     auto& enemy_board = boards_[static_cast<int>(next_team())];
     auto& human_board = boards_[HUMAN_BOARD];
     // Retrieves the groups
-    std::vector<std::vector<Move>> generated_moves;
-    auto groups = std::vector<std::tuple<char, char, char>>(); // row, col, unit
+
+    std::vector<std::pair<char, std::vector<std::pair<char, char>>>> group_available_targets; // n_units, {cell_1, cell2..., cell_n}
     for (char row = 0; row < rows_; row++) {
         for (char col = 0; col < columns_; col++) {
             char units = home_board.get(row, col);
             if (units) {
-                // We have units here
-                groups.push_back({row, col, units});
-            }
-        }
-    }
-    // Generate the legal moves for each group
-    for (auto& group : groups) {
-        // Add a new vector of moves
-        generated_moves.emplace_back();
-
-        // Get the information for each group of entity
-        char row = std::get<0>(group);
-        char col = std::get<1>(group);
-        char entities_number = std::get<2>(group);
-        // Check surrounding cells with distance of 1 - Distance not parametrable as the problem only allow movement on 8-connected cells.
-        for (char target_row = row - 1; target_row < row + 1; target_row++) {
-            for (char target_col = col - 1; target_col < col + 1; target_col++) {
-                // We only handle monoblob for now, splitting TODO
-                // Check if the move is in boundaries
-                if (target_row >= 0 && target_row < rows_ && target_col >= 0 && target_col < columns_) {
-                    // Do not generate obviously losing moves : cell is occupied and too powerful for the group
-                    if (human_board.get(target_row, target_col) > entities_number or enemy_board.get(target_col, target_row) >= std::ceil(1.5 * entities_number)) {
-                        continue;
-                    } 
-                    generated_moves.back().emplace_back(row, col, target_row, target_col, entities_number);
+                std::vector<std::pair<char, char>> available_cells;
+                group_available_targets.emplace_back(); // Create a new vector of available cells
+                // We have units here : Check surrounding cells
+                for (int target_row = row - 1; target_row <= row + 1; target_row++) {
+                    for (int target_col = col - 1; target_col <= col + 1; target_col++) {
+                        // Check if the target cell is in boundaries
+                        if (target_row >= 0 && target_row < rows_ && target_col >= 0 && target_col < columns_) {
+                            // Do not generate obviously losing moves : cell is occupied and too powerful for the group
+                            if (human_board.get(target_row, target_col) > units or
+                                enemy_board.get(target_col, target_row) >= std::ceil(1.5 * units)) {
+                                continue;
+                            }
+                            available_cells.emplace_back(target_row, target_col);
+                        }
+                    }
                 }
             }
         }
     }
-    return generated_moves;
+    return group_available_targets;
 }
 
 void Game::set_home(char row, char col) {
@@ -111,4 +102,13 @@ void Game::update_state(const std::vector<Update>& updates) {
 
 int Game::static_eval() const {
     return 0;
+}
+
+std::set<Move> Game::generate_legal_moves() const {
+    auto moves_per_group = generate_per_group_moves();
+    std::set<Move> ret;
+    for (auto possible_group_move : moves_per_group) {
+        // Every loop turn will yield all the possible moves that a group can do.
+    }
+    return ret;
 }

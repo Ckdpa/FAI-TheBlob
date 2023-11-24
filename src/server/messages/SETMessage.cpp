@@ -5,7 +5,7 @@
 #include "SETMessage.h"
 
 std::string SETMessage::encode() const {
-    return nullptr; // We should no send SET messages
+    return "ERROR"; // We should no send SET messages
 }
 
 SETMessage::SETMessage(std::string data)

@@ -5,7 +5,7 @@
 #include "ENDMessage.h"
 
 std::string ENDMessage::encode() const {
-    return nullptr;
+    return "ERROR";
 }
 
 GameMessage::MessageType ENDMessage::get_message_type() const {

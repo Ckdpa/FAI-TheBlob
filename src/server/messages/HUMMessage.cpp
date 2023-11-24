@@ -5,7 +5,7 @@
 #include "HUMMessage.h"
 
 std::string HUMMessage::encode() const {
-    return nullptr; // We do not send encode messages
+    return "ERROR"; // We do not send encode messages
 }
 
 HUMMessage::HUMMessage(std::string data) {

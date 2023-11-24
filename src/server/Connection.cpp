@@ -243,7 +243,7 @@ std::string Connection::consume_nchars(int n_chars) {
     if (get_total_bytes_read() - get_total_bytes_used() < n_chars) {
         // Read n_chars from socket.
         if (!read_socket(n_chars)) {
-            return nullptr;
+            throw std::runtime_error("Could not read from socket");
         }
     }
     // Retrieve the data

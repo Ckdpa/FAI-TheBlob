@@ -14,6 +14,16 @@
 
 
 int main(int argc, char* argv[]) {
+
+    /* Testing
+    Game g(20, 20, GameTeam::VAMPIRE);
+    g.update_state({Update(0, 0, 0, 3, 0)});
+    g.update_state({Update(0, 2, 0, 3, 0)});
+    std::cout << g << std::endl;
+    g.generate_legal_moves();
+    return 0;
+    */
+
     std::string ip("127.0.0.1");
     std::string port("5555");
     if (argc > 1) {

@@ -5,7 +5,7 @@
 #include "HMEMessage.h"
 
 std::string HMEMessage::encode() const {
-    return nullptr; // We should not send this message
+    return "ERROR"; // We should not send this message
 }
 
 HMEMessage::HMEMessage(std::string data)
