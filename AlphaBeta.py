@@ -24,7 +24,6 @@ def alpha_beta(node : GameNode, depth, alpha, beta, maximizingPlayer):
             value = max(value, alpha_beta(child_node, depth - 1, alpha, beta, False))
             alpha = max(alpha, value)
             if beta <= alpha:
-                print("Beta cut-off")
                 break  # Beta cut-off
         return value
     # For minimzing node (aka global enemy)
@@ -36,7 +35,6 @@ def alpha_beta(node : GameNode, depth, alpha, beta, maximizingPlayer):
             value = min(value, alpha_beta(child_node, depth - 1, alpha, beta, True))
             beta = min(beta, value)
             if beta <= alpha:
-                print("Alpha cut-off")
                 break  # Alpha cut-off
         return value
 
