@@ -85,15 +85,15 @@ class GameNode:
             print("Grouping")
             self.matrix[new_x][new_y] = (entity[0], entity[1] + target[1])
         elif target[0] == "human":
-            print("Attackng Humans")
+            # print("Attackng Humans")
             # Check if entity has more units than the target
             if entity[1] > target[1]:
                 # Transform humans into current entity
-                print("Won Battle")
+                # print("Won Battle")
                 self.matrix[new_x][new_y] = (entity[0], entity[1] + target[1])
             else:
                 # Perform a random battle
-                print("Random Battle!")
+                # print("Random Battle!")
                 self.matrix[new_x][new_y] = GameNode.simulate_battle(self, entity[1],target[1],True)
 
         else:
@@ -183,7 +183,7 @@ class GameNode:
 
         # Get battle winner
         outcome, proba = GameNode.battle_outcome(E1, E2)
-        print("Battle outcome: " + outcome)
+        # print("Battle outcome: " + outcome)
         # Setup
         winner = []
         final_num = 0
@@ -195,11 +195,11 @@ class GameNode:
                 if not random.random() <= proba:
                     # Monster only survives if it passes proba, if not -> dies
                     E1 -= 1
-            print('Number of attackers who survived: ' + str(E1))
+            # print('Number of attackers who survived: ' + str(E1))
             
             # Survivability of each human, then convert humans
             if target_is_human:
-                print("Checking human survival rate")
+                # print("Checking human survival rate")
                 # Survivability of each attacked human
                 for i in range(E2): 
                     if not random.random() <= proba:
@@ -340,7 +340,7 @@ class GameNode:
         if len(distances) != 0:
             min_dist = min(distances)
 
-        diff = enemy_sum - player_sum - min_dist
+        diff = enemy_sum - player_sum - min_dist/10
 
         diff += self.depth
 
