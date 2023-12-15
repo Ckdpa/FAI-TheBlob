@@ -65,7 +65,7 @@ class GameNode:
         # Givem a single move, this function needs to update it's matrix to show the result
         # This function could be use sequentially when we define mutilple moves per round
         # Also need toggle the self.player turn - however would not work with multiple moves above
-        print('Moving: ' + self.player_turn)
+        # print('Moving: ' + self.player_turn)
         self.move_history.append(move)
         # Parse move
         old_y, old_x = move[0], move[1]
@@ -82,7 +82,7 @@ class GameNode:
             self.matrix[new_x][new_y] = entity
         elif target[0] == self.player_turn:
             # Check this later when considering splitting
-            print("Grouping")
+            # print("Grouping")
             self.matrix[new_x][new_y] = (entity[0], entity[1] + target[1])
         elif target[0] == "human":
             # print("Attackng Humans")
@@ -100,15 +100,15 @@ class GameNode:
             print("Attacking Opponent")
             # Check if entity has 1.5x more units than the target
             if entity[1] >1.5*target[1]:
-                print("Won Battle - 1.5")
+                # print("Won Battle - 1.5")
                 self.matrix[new_x][new_y] = entity
             # Check if target has 1.5x more units than the entity
             if target[1] > 1.5*entity[1]:
-                print("Lost Battle - 1.5")
+                # print("Lost Battle - 1.5")
                 self.matrix[new_x][new_y] = entity
             else:
                 # Perform a random battle
-                print("Random Battle!")
+                # print("Random Battle!")
                 self.matrix[new_x][new_y] = GameNode.simulate_battle(self, entity[1],target[1],False)
         
         # Swap node player and enemy
@@ -125,20 +125,20 @@ class GameNode:
         # the functions used should return the aboslute score
         # from the point of view of the previous node (enemy)
         
-        print('------ HEURISTIC --- ')
-        print(self.heuristic)
-        print(type(self.heuristic))
+        # print('------ HEURISTIC --- ')
+        # print(self.heuristic)
+        # print(type(self.heuristic))
 
         # Dynamic heuristic
         if(self.heuristic == 1):
             # 1st Simple Heuristic:
             score =  GameNode.monster_difference(self)
-            print(' HEURISTIC 1 CONFIRMED')
+            # print(' HEURISTIC 1 CONFIRMED')
         elif(self.heuristic == 2):
             # 2nd Heuristic (distance):
             score =  GameNode.monster_difference_distance(self)
         else:
-            print(" =======  Invalid heuristic")
+            # print(" =======  Invalid heuristic")
             score = 0
 
         # score = GameNode.monster_difference_distance(self)
@@ -332,8 +332,6 @@ class GameNode:
         distances = []
         for human in humans:
             distances.append(abs(human[0] - enemy[0]) + abs(human[1] - enemy[1]))
-
-        print(distances)
 
         min_dist = 0
 

@@ -167,7 +167,7 @@ def play_game(args):
             # nb_moves, moves = COMPUTE_NEXT_MOVE(matrix, our_team)
             # nb_moves, moves = find_best_move(GameNode(matrix, our_team, our_team), int(depth))
             save_file(matrix,"last_matrix.pkl")
-            nb_moves, moves = find_best_minmax(GameNode(matrix, our_team, our_team, [], 0, heuristic), depth)
+            nb_moves, moves = find_best_move(GameNode(matrix, our_team, our_team, [], 0, heuristic), depth)
             print(nb_moves, moves, our_team)
             client_socket.send_mov(nb_moves, moves)
             print("--MOVES")
