@@ -14,14 +14,15 @@
 class GameNode {
 public:
 // Alpha beta
+    explicit GameNode(Game game);
 
-
+    std::vector<Move> get_next_move(int depth=2);
 private:
-    // Moves that lead to this state; undoing them leads to the previous move
-    std::vector<Move> applied_moves_;
     // If we are at root, this pointer leads to the associated board.
-    Game game_;
+    std::unique_ptr<Game> game_;
     std::vector<std::unique_ptr<GameNode>> reachable_games_;
+
+    double alpha_beta(int depth, double alpha, double beta, bool maximizing);
 };
 
 
