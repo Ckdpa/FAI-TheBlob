@@ -8,14 +8,15 @@
 #include <ostream>
 #include <bitset>
 #include <vector>
+#include <span>
 
 // This class is meant to efficiently store the board representation
 class GameBoard {
 private:
+    // Implement tu use of c++ 23 multispan / mdspan to reshape flat array in row, col TODO
     std::vector<char> board_;
     char rows_;
     char columns_;
-    
     void set(int index, char value);
     char get(int index) const;
 public:
@@ -24,6 +25,8 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const GameBoard& game);
     void set(char row, char column, char value);
     char get(char row, char column) const;
+    bool is_empty() const;
+    char cumulative_sum() const;
 };
 
 
