@@ -27,3 +27,12 @@ char Move::get_ending_y() const {
 char Move::get_number_entities() const {
     return number_entities_;
 }
+
+std::ostream &operator<<(std::ostream &os, const Move &move) {
+    os << "x_i: " << (int) move.starting_x_
+    << ", y_i: " << (int) move.starting_y_
+    << ", x_f: " << (int) move.ending_x_
+    << ", y_f: " << (int) move.ending_y_
+    << ", n: " << (int) move.number_entities_;
+    return os;
+}
