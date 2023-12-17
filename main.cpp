@@ -11,18 +11,10 @@
 #include "server/messages/MOVMessage.h"
 #include "server/MessageHandler.h"
 #include "server/messages/MAPMessage.h"
+#include "game/engine/GameNode.h"
 
 
 int main(int argc, char* argv[]) {
-
-    /* Testing
-    Game g(20, 20, GameTeam::VAMPIRE);
-    g.update_state({Update(0, 0, 0, 3, 0)});
-    g.update_state({Update(0, 2, 0, 3, 0)});
-    std::cout << g << std::endl;
-    g.generate_legal_moves();
-    return 0;
-    */
 
     std::string ip("127.0.0.1");
     std::string port("5555");
@@ -55,9 +47,10 @@ int main(int argc, char* argv[]) {
                 game = nullptr;
                 // Prepare for next game
                 Sleep(2);
-                if (!msg_handler.init_game("Dominatorix")) {
-                    return -1;
-                }
+                // This should be the normal behavior but it is now deprecated
+//                if (!msg_handler.init_game("Dominatorix")) {
+//                    return -1;
+//                }
                 break;
             case GameMessage::MessageType::BYE:
                 delete game;
@@ -88,13 +81,17 @@ int main(int argc, char* argv[]) {
             case GameMessage::MessageType::UPD:
                 game->update_state(dynamic_cast<UPDMessage*>(message)->get_updates());
                 {
-                    
-                    // Generate the next move # TODO
-                    //auto next_move = game->get_next_move();
-                    //auto msg = new MOVMessage(next_move);
-                    // Play the move
-                    // msg_handler.send_message(msg);
-                    // delete msg;
+                    // Generate the next move TODO
+                    // Handle configurable time limit to generate the move TODO
+                    GameNode root = GameNode(*game);
+                    auto next_move = root.get_next_move();
+                    for (const auto& move : next_move) {
+                        std::cout << move << std::endl;
+                    }
+                    auto msg = new MOVMessage(next_move);
+                    msg_handler.send_message(msg);
+                    delete msg;
+                    return -1; // Testing purpose
                 }
                 break;
         }
