@@ -9,7 +9,7 @@ std::string HMEMessage::encode() const {
 }
 
 HMEMessage::HMEMessage(std::string data)
-:row_(data[0]), col_(data[1]){
+:col_(data[0]), row_(data[1]){
 
 }
 
