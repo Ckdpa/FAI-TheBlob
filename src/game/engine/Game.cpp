@@ -10,6 +10,7 @@
 #include <ranges>
 
 std::ostream &operator<<(std::ostream &os, const Game &game) {
+    os << "Current team:" << (int) game.current_team_ << std::endl;
     os << "Next team:" << static_cast<int>(game.next_team()) << std::endl;
     for (char row = 0; row < game.rows_; row++) {
         for (char col = 0; col < game.columns_; col++) {
@@ -45,19 +46,19 @@ GameTeam Game::next_team() const {
     return static_cast<GameTeam>(1 - static_cast<int>(current_team_));
 }
 
-std::vector<std::pair<char, std::vector<std::pair<char, char>>>> Game::generate_per_group_moves() const {
+std::vector<std::tuple<char, char, char, std::vector<std::pair<char, char>>>> Game::generate_per_group_possibilities() const {
     auto& home_board = boards_[static_cast<int>(current_team_)];
     auto& enemy_board = boards_[static_cast<int>(next_team())];
     auto& human_board = boards_[HUMAN_BOARD];
-    // Retrieves the groups
-
-    std::vector<std::pair<char, std::vector<std::pair<char, char>>>> group_available_targets; // n_units, {cell_1, cell2..., cell_n}
+    std::cout << "Teams : curr / next / hum: " << static_cast<int>(current_team_) << static_cast<int>(next_team()) << HUMAN_BOARD << std::endl;
+    std::cout << "Boards" << std::endl << home_board << std::endl << enemy_board << std::endl << human_board << std::endl;
+    std::vector<std::tuple<char, char, char, std::vector<std::pair<char, char>>>> group_available_targets; // n_units, row, col, {cell_1, cell2..., cell_n}
     for (char row = 0; row < rows_; row++) {
         for (char col = 0; col < columns_; col++) {
             char units = home_board.get(row, col);
             if (units) {
+                std::cout << "Get: found " << (int) units << " at position " << (int) row << ", " << (int) col << std::endl;
                 std::vector<std::pair<char, char>> available_cells;
-                group_available_targets.emplace_back(); // Create a new vector of available cells
                 // We have units here : Check surrounding cells
                 for (int target_row = row - 1; target_row <= row + 1; target_row++) {
                     for (int target_col = col - 1; target_col <= col + 1; target_col++) {
@@ -65,13 +66,14 @@ std::vector<std::pair<char, std::vector<std::pair<char, char>>>> Game::generate_
                         if (target_row >= 0 && target_row < rows_ && target_col >= 0 && target_col < columns_) {
                             // Do not generate obviously losing moves : cell is occupied and too powerful for the group
                             if (human_board.get(target_row, target_col) > units or
-                                enemy_board.get(target_col, target_row) >= std::ceil(1.5 * units)) {
+                                enemy_board.get(target_row, target_col) >= std::ceil(1.5 * units)) {
                                 continue;
                             }
                             available_cells.emplace_back(target_row, target_col);
                         }
                     }
                 }
+                group_available_targets.emplace_back(units, row, col, available_cells);
             }
         }
     }
@@ -79,15 +81,24 @@ std::vector<std::pair<char, std::vector<std::pair<char, char>>>> Game::generate_
 }
 
 void Game::set_home(char row, char col) {
-    current_team_ = static_cast<GameTeam>(
-            (boards_[WEREWOLF_BOARD].get(row, col) & static_cast<int>(GameTeam::WEREWOLF)) |
-            (boards_[VAMPIRE_BOARD].get(row, col) & static_cast<int>(GameTeam::VAMPIRE))
-            );
+    if (boards_[WEREWOLF_BOARD].get(row, col)) {
+        current_team_ = GameTeam::WEREWOLF;
+    }
+    else {
+        current_team_ = GameTeam::VAMPIRE;
+    }
 }
 
 void Game::set_humans(const std::vector<std::pair<const char, const char>>& humans_coordinates) {
     for (auto& human_house : humans_coordinates) {
-        boards_[HUMAN_BOARD].set(human_house.first, human_house.second, 0);
+        auto& [y, x] = human_house;
+        if (x < 0 or x >= rows_) {
+            std::cerr << "Error: trying to set x=" << (int) x << " in board with " << (int) rows_ << "rows" << std::endl;
+        }
+        if (y < 0 or y >= columns_) {
+            std::cerr << "Error: trying to set y=" << (int) y << " in board with " << (int) columns_ << "columns" << std::endl;
+        }
+        boards_[HUMAN_BOARD].set(x, y, 0);
     }
 }
 
@@ -100,15 +111,94 @@ void Game::update_state(const std::vector<Update>& updates) {
 }
 
 
-int Game::static_eval() const {
-    return 0;
+double Game::static_eval() const {
+    if (boards_[(int) next_team()].is_empty()) {
+        return 99999.;
+    }
+    if (boards_[(int) current_team_].is_empty()) {
+        return -99999.;
+    }
+    return boards_[(int) current_team_].cumulative_sum() - boards_[(int) next_team()].cumulative_sum();
 }
 
-std::set<Move> Game::generate_legal_moves() const {
-    auto moves_per_group = generate_per_group_moves();
-    std::set<Move> ret;
-    for (auto possible_group_move : moves_per_group) {
+std::vector<std::vector<Move>> Game::generate_legal_moves() const {
+    auto moves_per_group = generate_per_group_possibilities();
+    std::vector<std::vector<Move>> ret;
+    for (const auto& possible_group_move : moves_per_group) {
         // Every loop turn will yield all the possible moves that a group can do.
+        // No split for now
+        auto [n_units, starting_row, starting_col, possible_destination_cells] = possible_group_move;
+
+        for (auto possible_destination_cell : possible_destination_cells) {
+            auto [ending_row, ending_col] = possible_destination_cell; //< Retrieve the coordinates
+            // Skip staying still move
+            if (starting_col == ending_col and starting_row == ending_row) {
+                continue;
+            }
+            // Create a new move for every cell we can reach (monoblob strategy)
+            ret.emplace_back();
+            ret.back().emplace_back(starting_row, starting_col, ending_row, ending_col, n_units);
+        }
     }
     return ret;
+}
+
+Game::Game(const Game &other)
+:rows_(other.rows_),
+columns_(other.columns_),
+boards_(std::array<GameBoard, 3>{other.boards_[0],
+                                 other.boards_[1],
+                                 other.boards_[2]
+}),
+current_team_(other.current_team_){
+}
+
+Game Game::simulate_move(std::vector<Move> moves) const {
+    Game ret =  Game(*this);
+    for (const auto& move : moves) {
+        char starting_x = move.get_starting_x();
+        char starting_y = move.get_starting_y();
+        char ending_x = move.get_ending_x();
+        char ending_y = move.get_ending_y();
+        char number_entities = move.get_number_entities();
+        char initial_entities = ret.boards_[(int) ret.current_team_].get(starting_x, starting_y);
+        ret.boards_[(int) ret.current_team_].set(starting_x, starting_y, initial_entities - number_entities);
+
+        // Check for humans and update number of moving entities if there are some
+        char human_on_target = ret.boards_[HUMAN_BOARD].get(ending_x, ending_y);
+        char enemies_on_target = ret.boards_[(int) ret.next_team()].get(ending_x, ending_y);
+
+        if (number_entities > human_on_target) {
+            number_entities += human_on_target;
+            ret.boards_[HUMAN_BOARD].set(ending_x, ending_y, 0);
+        } else {
+            // RIP to the entities!
+            number_entities = 0;
+        }
+        if (enemies_on_target >= std::ceil(1.5 * number_entities)) {
+            // RIP entities
+            number_entities = 0;
+        } else if (number_entities >= std::ceil(1.5 * enemies_on_target)) {
+            // RIP enemies
+            ret.boards_[(int) ret.next_team()].set(ending_x, ending_y, 0);
+        } else {
+            // Battle simulation ; for now we will consider that this is always a loss for the entities TODO
+            number_entities = 0;
+            // Decide winning team using random chance
+            // Update the values of enemy and entities accordingly to the outcome
+        }
+        ret.boards_[(int) current_team_].set(ending_x, ending_y, number_entities);
+    }
+    ret.current_team_ = ret.next_team();
+    return ret;
+}
+
+bool Game::is_over() const {
+    return boards_[WEREWOLF_BOARD].is_empty() or boards_[VAMPIRE_BOARD].is_empty();
+}
+
+void Game::print_boards() const {
+    std::cout << "Vampires" << std::endl << boards_[VAMPIRE_BOARD];
+    std::cout << "Humans" << std::endl <<  boards_[HUMAN_BOARD];
+    std::cout << "Werewolves" << std::endl <<  boards_[WEREWOLF_BOARD];
 }
