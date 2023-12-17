@@ -14,12 +14,14 @@ GameMessage::MessageType MOVMessage::get_message_type() const {
 }
 
 std::string MOVMessage::encode() const {
-    std::stringstream encoded_MOV("MOV");
+    std::stringstream encoded_MOV;
+    encoded_MOV << "MOV";
     encoded_MOV << static_cast<char>(moves_.size());
     for (auto move : moves_) {
-        encoded_MOV << move.get_starting_x() << move.get_starting_y(); //  Source coordinates
+        encoded_MOV << move.get_starting_y() << move.get_starting_x(); //  Source coordinates
         encoded_MOV << move.get_number_entities();
-        encoded_MOV << move.get_ending_x() << move.get_ending_y(); // Target coordinates
+        encoded_MOV << move.get_ending_y() << move.get_ending_x(); // Target coordinates
     }
+//    encoded_MOV << '\u0004' << '\u0003' << '\u0002' << '\u0003' << '\u0002';
     return encoded_MOV.str();
 }
