@@ -43,7 +43,8 @@ add_executable(Dominatorix
         src/game/engine/GameNode.cpp
         src/game/engine/GameNode.h
 )
-
+add_compile_definitions(NDEBUG)
+add_compile_options(-Wall)
 target_link_libraries(Dominatorix ws2_32)
 
 # target_compile_options(Dominatorix PRIVATE /W4)
