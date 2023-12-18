@@ -199,6 +199,9 @@ class GameNode:
         elif(self.heuristic == 2):
             # 2nd Heuristic (distance):
             score =  GameNode.monster_difference_distance(self)
+        elif(self.heuristic == 3):
+            # 2nd Heuristic (distance):
+            score =  GameNode.monster_difference_distance_enemy(self)
         else:
             # print(" =======  Invalid heuristic")
             score = 0
@@ -346,7 +349,7 @@ class GameNode:
 
         diff = enemy_sum - player_sum 
 
-        diff += self.depth
+        # diff += self.depth
 
         return diff
     
@@ -395,14 +398,82 @@ class GameNode:
         for human in humans:
             distances.append(abs(human[0] - enemy[0]) + abs(human[1] - enemy[1]))
 
-        min_dist = 0
+        human_dist = 0
 
         if len(distances) != 0:
-            min_dist = min(distances)
+            human_dist = min(distances)
 
-        diff = enemy_sum - player_sum - min_dist/10
+        diff = enemy_sum - player_sum - human_dist/10
 
-        diff += self.depth
+        # diff += self.depth
+
+        return diff
+    
+    def monster_difference_distance_enemy(self):
+        # Same as above but reward proximity to enemy when no humans left
+
+        # Current node team - enemy
+        diff = 0
+        player_sum = 0
+        for row in self.matrix:
+            for item in row:
+                if item[0] == self.player_turn:
+                    player_sum += item[1]
+        
+        enemy_sum = 0
+        for row in self.matrix:
+            for item in row:
+                if item[0] == self.enemy:
+                    enemy_sum += item[1]
+        
+        # Return large score if enemy dies
+        if enemy_sum == 0:
+            return -1000
+        if player_sum == 0:
+            return 1000
+
+        # Get the distance to the closest human
+        enemy = None
+        humans = []
+
+        # Get enemy location
+        for x, row in enumerate(self.matrix):
+            for y, item in enumerate(row):
+                if item[0] == self.enemy:
+                    enemy = (x, y)
+        
+        # Get Human location
+        humans = []
+        for x, row in enumerate(self.matrix):
+            for y, item in enumerate(row):
+                if item[0] == 'human':
+                    humans.append((x, y))
+        
+        # Calculate distance
+        distances = []
+        for human in humans:
+            distances.append(abs(human[0] - enemy[0]) + abs(human[1] - enemy[1]))
+
+        human_dist = 0
+        enemy_dist = 0
+
+        if len(distances) != 0:
+            human_dist = min(distances)
+
+        else:
+            # Get opponent location
+            for x, row in enumerate(self.matrix):
+                for y, item in enumerate(row):
+                    if item[0] == self.player_turn:
+                        player_location = (x, y)
+                        # enemy_dist = abs(player_location[0] - enemy[0]) + abs(player_location[1] - enemy[1])
+                        enemy_dist = abs(player_location[0] - enemy[0]) + abs(player_location[1] - enemy[1])
+            
+            print('enemy_dist: ', enemy_dist)
+
+        diff = enemy_sum - player_sum - human_dist/10 - enemy_dist/10
+
+        # diff += self.depth
 
         return diff
 
