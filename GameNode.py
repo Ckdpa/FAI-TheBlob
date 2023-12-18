@@ -23,6 +23,8 @@ class GameNode:
         # Check board state
         state = GameNode.check_board_state(self)
 
+        print(self.player_turn)
+
         print(state)
         
         moves = GameNode.legal_moves(self)
