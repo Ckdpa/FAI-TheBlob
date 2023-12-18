@@ -11,6 +11,7 @@ from AlphaBeta import alpha_beta
 from AlphaBeta import find_best_move
 from MinMax import MinMax
 from MinMax import find_best_minmax
+from AlphaBeta_ShortPath import find_best_move_shortpath
 
 
 class Strategy(Enum):
