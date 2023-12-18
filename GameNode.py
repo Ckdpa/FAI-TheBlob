@@ -34,7 +34,7 @@ class GameNode:
 
         # Define the possible moves
         # TODO add diagonals
-        possible_deltas = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
+        possible_deltas = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (1, 1), (1, -1), (-1, 1)]  # Up, Down, Left, Right
 
         legal_deltas = []
 
