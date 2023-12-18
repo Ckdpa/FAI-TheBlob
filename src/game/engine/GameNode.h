@@ -16,7 +16,7 @@ public:
 // Alpha beta
     explicit GameNode(Game game);
 
-    std::vector<Move> get_next_move(int depth=2);
+    std::vector<Move> get_next_move(int depth=3);
 private:
     // If we are at root, this pointer leads to the associated board.
     std::unique_ptr<Game> game_;

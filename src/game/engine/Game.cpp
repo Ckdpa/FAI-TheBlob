@@ -50,14 +50,14 @@ std::vector<std::tuple<char, char, char, std::vector<std::pair<char, char>>>> Ga
     auto& home_board = boards_[static_cast<int>(current_team_)];
     auto& enemy_board = boards_[static_cast<int>(next_team())];
     auto& human_board = boards_[HUMAN_BOARD];
-    std::cout << "Teams : curr / next / hum: " << static_cast<int>(current_team_) << static_cast<int>(next_team()) << HUMAN_BOARD << std::endl;
-    std::cout << "Boards" << std::endl << home_board << std::endl << enemy_board << std::endl << human_board << std::endl;
+//    std::cout << "Teams : curr / next / hum: " << static_cast<int>(current_team_) << static_cast<int>(next_team()) << HUMAN_BOARD << std::endl;
+//    std::cout << "Boards" << std::endl << home_board << std::endl << enemy_board << std::endl << human_board << std::endl;
     std::vector<std::tuple<char, char, char, std::vector<std::pair<char, char>>>> group_available_targets; // n_units, row, col, {cell_1, cell2..., cell_n}
     for (char row = 0; row < rows_; row++) {
         for (char col = 0; col < columns_; col++) {
             char units = home_board.get(row, col);
             if (units) {
-                std::cout << "Get: found " << (int) units << " at position " << (int) row << ", " << (int) col << std::endl;
+//                std::cout << "Get: found " << (int) units << " at position " << (int) row << ", " << (int) col << std::endl;
                 std::vector<std::pair<char, char>> available_cells;
                 // We have units here : Check surrounding cells
                 for (int target_row = row - 1; target_row <= row + 1; target_row++) {

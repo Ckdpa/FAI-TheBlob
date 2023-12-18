@@ -85,20 +85,19 @@ int main(int argc, char* argv[]) {
                     // Handle configurable time limit to generate the move TODO
                     GameNode root = GameNode(*game);
                     auto next_move = root.get_next_move();
-                    for (const auto& move : next_move) {
-                        std::cout << move << std::endl;
-                    }
+//                    for (const auto& move : next_move) {
+//                        std::cout << move << std::endl;
+//                    }
                     auto msg = new MOVMessage(next_move);
                     msg_handler.send_message(msg);
                     delete msg;
-                    return -1; // Testing purpose
                 }
                 break;
         }
         delete message;
-        if (game) {
-            std::cout << *game;
-        }
+//        if (game) {
+//            std::cout << *game;
+//        }
     }
     return 0;
 }
