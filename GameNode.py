@@ -18,9 +18,22 @@ class GameNode:
             
         # self.move_history = move_history if move_history is not None else []  # List of moves made in the game
 
-    def generate_moves(self): # Returns list of legal moves using sendmov format
-        # Should output a list of all legal moves for current turn and matrix state
-        # Will start by considering no splits
+    def generate_moves(self): # Returns list of moves depending on board state
+
+        # Check board state
+        state = GameNode.check_board_state(self)
+
+        print(state)
+        
+        moves = GameNode.legal_moves(self)
+        
+        return moves
+        # Generate all legal moves for the current player in this game state
+        # You'll need to implement this method based on the rules of your chess-like game.
+    
+    def legal_moves(self):
+
+        # Returns list of legal moves using sendmov format
 
         # print("Generating moves")
         
@@ -60,6 +73,7 @@ class GameNode:
         return legal_moves
         # Generate all legal moves for the current player in this game state
         # You'll need to implement this method based on the rules of your chess-like game.
+
 
     def apply_move(self, move): # Seems to be working correctly
         # Givem a single move, this function needs to update it's matrix to show the result
@@ -341,3 +355,39 @@ class GameNode:
         diff += self.depth
 
         return diff
+
+    def check_board_state(self):
+        # Used to determine available moves
+        # Should return normal, weak_opponent, no_humans
+
+        state = 'normal'
+
+        # Compute monster ratio
+        ratio = 0
+        player_sum = 0
+        for row in self.matrix:
+            for item in row:
+                if item[0] == self.player_turn:
+                    player_sum += item[1]
+        
+        enemy_sum = 0
+        for row in self.matrix:
+            for item in row:
+                if item[0] == self.enemy:
+                    enemy_sum += item[1]
+
+        ratio = player_sum/enemy_sum
+        if ratio > 1.5:
+            state = 'weak_opponent'
+        
+        # Compute human presence
+        human_sum = 0
+        for row in self.matrix:
+            for item in row:
+                if item[0] == 'human':
+                    human_sum += item[1]
+        
+        if human_sum == 0:
+            state = 'no_humans'
+        
+        return state
