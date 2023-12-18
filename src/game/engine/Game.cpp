@@ -34,9 +34,9 @@ Game::Game(char rows, char columns, GameTeam team)
         :rows_(rows),
          columns_(columns),
          boards_(std::array<GameBoard, 3>{
-                 GameBoard(rows_, columns_),
-                 GameBoard(rows_, columns_),
-                 GameBoard(rows_, columns_)
+                 GameBoard(rows, columns),
+                 GameBoard(rows, columns),
+                 GameBoard(rows, columns)
          }),
          current_team_(team)
 {
@@ -98,7 +98,6 @@ void Game::set_humans(const std::vector<std::pair<const char, const char>>& huma
         if (y < 0 or y >= columns_) {
             std::cerr << "Error: trying to set y=" << (int) y << " in board with " << (int) columns_ << "columns" << std::endl;
         }
-        boards_[HUMAN_BOARD].set(x, y, 0);
     }
 }
 
@@ -111,14 +110,14 @@ void Game::update_state(const std::vector<Update>& updates) {
 }
 
 
-double Game::static_eval() const {
+int Game::static_eval() const {
     if (boards_[(int) next_team()].is_empty()) {
         return 99999.;
     }
     if (boards_[(int) current_team_].is_empty()) {
         return -99999.;
     }
-    return boards_[(int) current_team_].cumulative_sum() - boards_[(int) next_team()].cumulative_sum();
+    return 1000 * boards_[(int) current_team_].cumulative_sum() - boards_[(int) next_team()].cumulative_sum();
 }
 
 std::vector<std::vector<Move>> Game::generate_legal_moves() const {
@@ -189,7 +188,7 @@ Game Game::simulate_move(std::vector<Move> moves) const {
         }
         ret.boards_[(int) current_team_].set(ending_x, ending_y, number_entities);
     }
-    ret.current_team_ = ret.next_team();
+//    ret.update_playing_team();
     return ret;
 }
 
@@ -201,4 +200,14 @@ void Game::print_boards() const {
     std::cout << "Vampires" << std::endl << boards_[VAMPIRE_BOARD];
     std::cout << "Humans" << std::endl <<  boards_[HUMAN_BOARD];
     std::cout << "Werewolves" << std::endl <<  boards_[WEREWOLF_BOARD];
+}
+
+int Game::compute_distance(const std::tuple<char, char, char> &group_a, const std::tuple<char, char, char> &group_b) {
+    const auto& [units_a, row_a, col_a] = group_a;
+    const auto& [units_b, row_b, col_b] = group_b;
+    return std::sqrt((row_a - row_b) * (row_a - row_b) + (col_a - col_b) * (col_a - col_b));
+}
+
+void Game::update_playing_team() {
+    current_team_ = next_team();
 }

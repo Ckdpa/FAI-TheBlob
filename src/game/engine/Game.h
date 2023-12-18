@@ -34,15 +34,21 @@ public:
     void set_humans(const std::vector<std::pair<const char, const char>>& humans_coordinates);
     void update_state(const std::vector<Update>& updates);
     [[nodiscard]] GameTeam next_team() const;
-    double static_eval() const;
+    int static_eval() const;
     std::vector<std::vector<Move>> generate_legal_moves() const;
     bool is_over() const;
+    void update_playing_team();
+
+    GameTeam current_team_;
+
+    static int compute_distance(const std::tuple<char, char, char>& group_a, const std::tuple<char, char, char>& group_b);
+
+    std::array<GameBoard, 3> boards_;
+
 private:
     std::vector<std::tuple<char, char, char, std::vector<std::pair<char, char>>>> generate_per_group_possibilities() const;
     char rows_;
     char columns_;
-    std::array<GameBoard, 3> boards_;
-    GameTeam current_team_;
 };
 
 
