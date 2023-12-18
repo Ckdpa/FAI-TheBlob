@@ -23,12 +23,16 @@ class GameNode:
         # Check board state
         state = GameNode.check_board_state(self)
 
-        print(self.player_turn)
-
-        print(state)
-        
-        moves = GameNode.legal_moves(self)
-        
+        moves = []
+        if state == 'normal':
+            moves = GameNode.legal_moves(self)
+            print('normal')
+        if state == 'no_humans' or state == 'weak_opponent':
+            moves = GameNode.attack_moves(self)
+            print(self.player_turn)
+            print(state)
+            print('attack_moves')
+            
         return moves
         # Generate all legal moves for the current player in this game state
         # You'll need to implement this method based on the rules of your chess-like game.
@@ -76,6 +80,50 @@ class GameNode:
         # Generate all legal moves for the current player in this game state
         # You'll need to implement this method based on the rules of your chess-like game.
 
+    def attack_moves(self):
+
+        # Returns list of legal moves using sendmov format
+
+        # print("Generating moves")
+        
+        # Get our location
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                if(self.matrix[i][j][0] == self.player_turn):
+                    our_current_x = j
+                    our_current_y = i
+                    our_nb_creature = self.matrix[i][j][1]
+                    break
+        
+        # Get enemy location
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                if(self.matrix[i][j][0] == self.enemy):
+                    enemy_current_x = j
+                    enemy_current_y = i
+                    enemy_nb_creature = self.matrix[i][j][1]
+                    break
+
+        # Calculate direction towards the enemy
+        dx = enemy_current_x - our_current_x
+        dy = enemy_current_y - our_current_y
+
+        # Ensure that the direction is normalized to either -1, 0, or 1
+        dx = 0 if dx == 0 else dx // abs(dx)
+        dy = 0 if dy == 0 else dy // abs(dy)
+
+        legal_deltas = [(dx, dy)]
+
+        # For now num moves = 1, will need to change for splits
+        nb_moves = 1
+        # Generate move messages with correct format
+        attack_moves = []
+        for legal_delta in legal_deltas:
+            future_delta_x, future_delta_y = legal_delta
+            legal_move  = [(our_current_x, our_current_y, our_nb_creature, our_current_x+future_delta_x, our_current_y+future_delta_y)]
+            attack_moves.append((nb_moves,(legal_move)))
+
+        return attack_moves
 
     def apply_move(self, move): # Seems to be working correctly
         # Givem a single move, this function needs to update it's matrix to show the result
@@ -115,7 +163,7 @@ class GameNode:
                 # self.matrix[new_x][new_y] = GameNode.simulate_battle(self, entity[1],target[1],True)
 
         else:
-            print("Attacking Opponent")
+            # print("Attacking Opponent")
             # Check if entity has 1.5x more units than the target
             if entity[1] >1.5*target[1]:
                 # print("Won Battle - 1.5")
