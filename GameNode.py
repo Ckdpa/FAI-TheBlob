@@ -92,9 +92,11 @@ class GameNode:
                 # print("Won Battle")
                 self.matrix[new_x][new_y] = (entity[0], entity[1] + target[1])
             else:
+                # Automatically lose instead of simulating random battle
+                self.matrix[new_x][new_y] = target
                 # Perform a random battle
                 # print("Random Battle!")
-                self.matrix[new_x][new_y] = GameNode.simulate_battle(self, entity[1],target[1],True)
+                # self.matrix[new_x][new_y] = GameNode.simulate_battle(self, entity[1],target[1],True)
 
         else:
             print("Attacking Opponent")
@@ -102,14 +104,10 @@ class GameNode:
             if entity[1] >1.5*target[1]:
                 # print("Won Battle - 1.5")
                 self.matrix[new_x][new_y] = entity
-            # Check if target has 1.5x more units than the entity
-            if target[1] > 1.5*entity[1]:
-                # print("Lost Battle - 1.5")
-                self.matrix[new_x][new_y] = entity
+            # Automatically lose instead of simulating random battle
             else:
-                # Perform a random battle
-                # print("Random Battle!")
-                self.matrix[new_x][new_y] = GameNode.simulate_battle(self, entity[1],target[1],False)
+                # print("Lost Battle - 1.5")
+                self.matrix[new_x][new_y] = target
         
         # Swap node player and enemy
         self.player_turn, self.enemy = self.enemy, self.player_turn
@@ -343,4 +341,3 @@ class GameNode:
         diff += self.depth
 
         return diff
-
