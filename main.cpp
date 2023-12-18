@@ -63,16 +63,15 @@ int main(int argc, char* argv[]) {
                 home_col = dynamic_cast<HMEMessage*>(message)->get_starting_col();
                 break;
             case GameMessage::MessageType::HUM:
-                std::cout << "Received HUM message" << std::endl;
                 game->set_humans(dynamic_cast<HUMMessage*>(message)->get_human_coordinates_());  // Hum Message is not very useful...
-                std::cout << "Used HUM message" << std::endl;
                 break;
             case GameMessage::MessageType::NME:
                 break; // Should not happen
             case GameMessage::MessageType::SET:
                 game = new Game(dynamic_cast<SETMessage*>(message)->get_rows(),
                                 dynamic_cast<SETMessage*>(message)->get_columns(),
-                                GameTeam::HUMAN); // Set team to HUMAN for start, it will be updated in further messages.
+                                GameTeam::HUMAN);
+                // Set team to HUMAN for start, it will be updated in further messages.
                 break;
             case GameMessage::MessageType::MAP:
                 game->update_state(dynamic_cast<MAPMessage*>(message)->get_updates());
@@ -81,10 +80,9 @@ int main(int argc, char* argv[]) {
             case GameMessage::MessageType::UPD:
                 game->update_state(dynamic_cast<UPDMessage*>(message)->get_updates());
                 {
-                    // Generate the next move TODO
                     // Handle configurable time limit to generate the move TODO
                     GameNode root = GameNode(*game);
-                    auto next_move = root.get_next_move();
+                    auto next_move = root.get_next_move_2();
 //                    for (const auto& move : next_move) {
 //                        std::cout << move << std::endl;
 //                    }
