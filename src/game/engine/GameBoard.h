@@ -25,6 +25,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const GameBoard& game);
     void set(char row, char column, char value);
     char get(char row, char column) const;
+    std::vector<std::tuple<char, char, char>> get_board_groups() const;
     bool is_empty() const;
     char cumulative_sum() const;
 };

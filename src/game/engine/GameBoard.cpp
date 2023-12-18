@@ -52,6 +52,19 @@ char GameBoard::cumulative_sum() const {
     return ret;
 }
 
+std::vector<std::tuple<char, char, char>> GameBoard::get_board_groups() const {
+    std::vector<std::tuple<char, char, char>> ret;
+    char units;
+    for (int row = 0; row < rows_; row++) {
+        for (int col = 0; col < columns_; col++) {
+            if ((units = get(row, col)) > 0) {
+                ret.emplace_back(units, row, col);
+            }
+        }
+    }
+    return ret;
+}
+
 
 
 
