@@ -32,6 +32,11 @@ class GameNode:
             print(self.player_turn)
             print(state)
             print('attack_moves')
+        if state == 'one_human_group':
+            moves = GameNode.attack_human_moves(self)
+            print(self.player_turn)
+            print(state)
+            print('one_human_group')
             
         return moves
         # Generate all legal moves for the current player in this game state
@@ -99,6 +104,51 @@ class GameNode:
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix[i])):
                 if(self.matrix[i][j][0] == self.enemy):
+                    enemy_current_x = j
+                    enemy_current_y = i
+                    enemy_nb_creature = self.matrix[i][j][1]
+                    break
+
+        # Calculate direction towards the enemy
+        dx = enemy_current_x - our_current_x
+        dy = enemy_current_y - our_current_y
+
+        # Ensure that the direction is normalized to either -1, 0, or 1
+        dx = 0 if dx == 0 else dx // abs(dx)
+        dy = 0 if dy == 0 else dy // abs(dy)
+
+        legal_deltas = [(dx, dy)]
+
+        # For now num moves = 1, will need to change for splits
+        nb_moves = 1
+        # Generate move messages with correct format
+        attack_moves = []
+        for legal_delta in legal_deltas:
+            future_delta_x, future_delta_y = legal_delta
+            legal_move  = [(our_current_x, our_current_y, our_nb_creature, our_current_x+future_delta_x, our_current_y+future_delta_y)]
+            attack_moves.append((nb_moves,(legal_move)))
+
+        return attack_moves
+    
+    def attack_human_moves(self):
+
+        # Returns list of legal moves using sendmov format
+
+        # print("Generating moves")
+        
+        # Get our location
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                if(self.matrix[i][j][0] == self.player_turn):
+                    our_current_x = j
+                    our_current_y = i
+                    our_nb_creature = self.matrix[i][j][1]
+                    break
+        
+        # Get enemy location
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                if(self.matrix[i][j][0] == 'human'):
                     enemy_current_x = j
                     enemy_current_y = i
                     enemy_nb_creature = self.matrix[i][j][1]
@@ -482,6 +532,20 @@ class GameNode:
         # Should return normal, weak_opponent, no_humans
 
         state = 'normal'
+
+        # Compute human presence
+        human_sum = 0
+        human_groups = 0
+        for row in self.matrix:
+            for item in row:
+                if item[0] == 'human':
+                    human_sum += item[1]
+                    human_groups +=1
+        
+        if human_sum == 0:
+            state = 'no_humans'
+        if human_groups == 1:
+            state = 'one_human_group'
 
         # Compute monster ratio
         ratio = 0
