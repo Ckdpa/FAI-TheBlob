@@ -440,7 +440,7 @@ class GameNode:
         humans = []
         for x, row in enumerate(self.matrix):
             for y, item in enumerate(row):
-                if item[0] == 'human':
+                if item[0] == 'human' and item[1] < enemy_sum:
                     humans.append((x, y))
         
         # Calculate distance
