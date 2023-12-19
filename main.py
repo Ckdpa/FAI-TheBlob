@@ -123,7 +123,7 @@ def UPDATE_GAME_STATE(message,matrix,hme):
             if(h == 0 and v == 0 and w == 0):
                 matrix[r][c] = ('Empty', 0)
 
-        print("Updated matrix", matrix)
+        # print("Updated matrix", matrix)
         return matrix
 
 def save_file(matrix,file_name):
@@ -154,7 +154,7 @@ def play_game(args):
     # map message
     message = client_socket.get_message()
     matrix, our_team = UPDATE_GAME_STATE(message,matrix,hme)
-    print(matrix)
+    # print(matrix)
     # Save matrix
     save_file(matrix,"matrix_2.pkl")
     # start of the game
@@ -169,10 +169,10 @@ def play_game(args):
             # nb_moves, moves = find_best_move(GameNode(matrix, our_team, our_team), int(depth))
             save_file(matrix,"last_matrix.pkl")
             nb_moves, moves = find_best_move(GameNode(matrix, our_team, our_team, [], 0, heuristic), depth)
-            print(nb_moves, moves, our_team)
+            # print(nb_moves, moves, our_team)
             client_socket.send_mov(nb_moves, moves)
-            print("--MOVES")
-            print(nb_moves, moves)
+            # print("--MOVES")
+            # print(nb_moves, moves)
             pass
 
 if __name__ == '__main__':

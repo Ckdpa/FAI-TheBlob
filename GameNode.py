@@ -26,17 +26,17 @@ class GameNode:
         moves = []
         if state == 'normal':
             moves = GameNode.legal_moves(self)
-            print('normal')
+            # print('normal')
         if state == 'no_humans' or state == 'weak_opponent':
             moves = GameNode.attack_moves(self)
-            print(self.player_turn)
-            print(state)
-            print('attack_moves')
+            # print(self.player_turn)
+            # print(state)
+            # print('attack_moves')
         if state == 'one_human_group':
             moves = GameNode.attack_human_moves(self)
-            print(self.player_turn)
-            print(state)
-            print('one_human_group')
+            # print(self.player_turn)
+            # print(state)
+            # print('one_human_group')
             
         return moves
         # Generate all legal moves for the current player in this game state
