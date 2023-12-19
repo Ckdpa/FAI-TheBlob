@@ -16,7 +16,7 @@
 
 
 GameMessage::MessageType MessageHandler::parse_message_type(const std::string &bytes) {
-    std::cout << "Parse message type: "<< bytes << std::endl;
+    // std::cout << "Parse message type: "<< bytes << std::endl;
     if (bytes == "UPD") {
         return GameMessage::MessageType::UPD;
     }

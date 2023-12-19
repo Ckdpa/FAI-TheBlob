@@ -23,7 +23,7 @@
 
 #define MAX_READING_TRIES 3
 
-/*
+/* Linux implementation
 Connection::Connection(const std::string& ip, int port) {
     ufds_[0].events = POLLIN;
     status_ = CONN_STATUS::DISCONNECTED;
