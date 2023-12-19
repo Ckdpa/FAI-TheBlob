@@ -25,7 +25,7 @@ public:
     Game(char rows, char columns, GameTeam team);
     Game(const Game& other);
 
-    Game simulate_move(std::vector<Move> moves) const;
+    Game simulate_move(std::vector<Move> moves, bool update) const;
 
     ~Game() = default;
     friend std::ostream& operator<<(std::ostream& os, const Game& game);

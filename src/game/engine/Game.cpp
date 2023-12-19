@@ -112,12 +112,12 @@ void Game::update_state(const std::vector<Update>& updates) {
 
 int Game::static_eval() const {
     if (boards_[(int) next_team()].is_empty()) {
-        return 99999.;
+        return -99999;
     }
     if (boards_[(int) current_team_].is_empty()) {
-        return -99999.;
+        return 99999;
     }
-    return 1000 * boards_[(int) current_team_].cumulative_sum() - boards_[(int) next_team()].cumulative_sum();
+    return boards_[(int) current_team_].cumulative_sum() - boards_[(int) next_team()].cumulative_sum();
 }
 
 std::vector<std::vector<Move>> Game::generate_legal_moves() const {
@@ -152,9 +152,9 @@ boards_(std::array<GameBoard, 3>{other.boards_[0],
 current_team_(other.current_team_){
 }
 
-Game Game::simulate_move(std::vector<Move> moves) const {
-    Game ret =  Game(*this);
-    for (const auto& move : moves) {
+Game Game::simulate_move(std::vector<Move> moves, bool update) const {
+    Game ret(*this);
+    for (const auto &move: moves) {
         char starting_x = move.get_starting_x();
         char starting_y = move.get_starting_y();
         char ending_x = move.get_ending_x();
@@ -174,10 +174,10 @@ Game Game::simulate_move(std::vector<Move> moves) const {
             // RIP to the entities!
             number_entities = 0;
         }
-        if (enemies_on_target >= std::ceil(1.5 * number_entities)) {
+        if (enemies_on_target >= std::round(1.5 * number_entities)) {
             // RIP entities
             number_entities = 0;
-        } else if (number_entities >= std::ceil(1.5 * enemies_on_target)) {
+        } else if (number_entities >= std::round(1.5 * enemies_on_target)) {
             // RIP enemies
             ret.boards_[(int) ret.next_team()].set(ending_x, ending_y, 0);
         } else {
@@ -188,7 +188,9 @@ Game Game::simulate_move(std::vector<Move> moves) const {
         }
         ret.boards_[(int) current_team_].set(ending_x, ending_y, number_entities);
     }
-//    ret.update_playing_team();
+    if (update) {
+        ret.update_playing_team();
+    }
     return ret;
 }
 
