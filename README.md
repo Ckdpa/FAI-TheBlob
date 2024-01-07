@@ -10,7 +10,7 @@ Hugo de Rohan Willner
 
 # How to use
 
-To get the server running on an Apple machine, follow the instructions in [this repo.]([url](https://github.com/Succo/twilight/))
+To get the server running on an Apple machine, follow the instructions in [this repo](https://github.com/Succo/twilight/).
 
 Once the server is running, the following command can be used to run the program locally:
 
