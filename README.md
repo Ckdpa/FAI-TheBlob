@@ -9,6 +9,17 @@ Raphaël Monges
 Hugo de Rohan Willner
 
 # How to use
+
+To get the server running on an Apple machine, follow the instructions in [this repo.]([url](https://github.com/Succo/twilight/))
+
+Once the server is running, the following command can be used to run the program locally:
+
+**python main.py localhost 5555**
+
+The user will then be promted to select hyperparameters such as the player name, the search tree depth and heurisitic function.
+
+To run launch a second player, the command above can be run again in a new terminal instance.
+
 ## Python
 
 ## C++
