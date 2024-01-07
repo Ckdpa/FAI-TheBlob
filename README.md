@@ -13,4 +13,6 @@ Hugo de Rohan Willner
 
 ## C++
 The binary is targeted to Windows OS. Uses CMake toolchain, C++23. no specific compalier required.
-The IP and Name of the solution are to be set in the main.cpp file (compilation required for changes to take effect)
+The IP and Name of the solution are to be set in the main.cpp file (compilation required for changes to take effect).
+
+Once compiled, the binary can be launched with a double click
