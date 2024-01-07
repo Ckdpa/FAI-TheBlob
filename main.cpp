@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
     if (msg_handler.connect() != 0) {
         return -1;
     }
-    if (!msg_handler.init_game("Dominatorix")) {
+    if (!msg_handler.init_game("TheBlob")) {
         return -1;
     }
     // Initiate game
